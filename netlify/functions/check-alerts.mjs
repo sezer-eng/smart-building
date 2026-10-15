@@ -85,7 +85,6 @@ export default async (req) => {
   try {
     data = await getReading(topic);
   } catch (e) {
-    // انقطاع حقيقي عن الوسيط — نعتبره أيضاً حالة تستحق تنبيه إذا استمر
     return new Response(JSON.stringify({ ok: false, error: e.message }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
@@ -113,7 +112,6 @@ export default async (req) => {
   const hasIssueNow = issues.length > 0;
 
   let notifiedCount = 0;
-  // نرسل فقط عند تغيّر الحالة من "طبيعي" إلى "فيه مشكلة" — عشان ما نكرر نفس التنبيه كل دقيقتين
   if (hasIssueNow && !prev.hadIssue) {
     const subsStore = getStore('push-subscriptions');
     const { blobs } = await subsStore.list();
