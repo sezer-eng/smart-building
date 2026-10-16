@@ -7,7 +7,6 @@ const CORS_HEADERS = {
 };
 
 export default async (req) => {
-‎  // المتصفح يرسل طلب "OPTIONS" تمهيدي قبل أي طلب من موقع بمجال مختلف — نرد عليه بالسماح
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: CORS_HEADERS });
   }
