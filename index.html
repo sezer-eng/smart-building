@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#040912">
 <link rel="apple-touch-icon" href="apple-touch-icon.jpg">
 <link rel="icon" type="image/jpeg" href="apple-touch-icon.jpg">
-<title>مبنى الطاقة بالرقائق الشفافة | لوحة المراقبة الذكية</title>
+<title>مبنى الطاقة بالرقائق الشفافة | لوحة المراقبة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,23 +18,51 @@
   --grad:linear-gradient(135deg,#19E6FF 0%,#2F8CFF 100%);
   --solar:linear-gradient(135deg,#FFE94D 0%,#FFA51F 100%);
   --r:22px;
+  --glow: 0 0 25px rgba(34,211,238,0.25);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{font-family:"IBM Plex Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh;
   background-image:radial-gradient(800px 480px at 90% -8%,rgba(0,200,255,.20),transparent 60%),radial-gradient(640px 460px at -5% 40%,rgba(255,176,32,.10),transparent 60%),linear-gradient(rgba(60,190,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(60,190,255,.045) 1px,transparent 1px);
-  background-size:auto,auto,38px 38px,38px 38px;background-attachment:fixed;padding-bottom:100px}
+  background-size:auto,auto,38px 38px,38px 38px;background-attachment:fixed;padding-bottom:calc(85px + env(safe-area-inset-bottom))}
 .num{font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate;display:inline-block}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 :focus-visible{outline:2px solid var(--sky);outline-offset:3px;border-radius:10px}
 .wrap{max-width:1180px;margin:0 auto;padding:0 16px}
 
-/* Top bar */
+/* Navbar top */
 .top{position:sticky;top:0;z-index:20;backdrop-filter:blur(16px);background:rgba(4,9,18,.8);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
 .top .wrap{display:flex;align-items:center;gap:10px;min-height:64px;padding-block:8px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.02rem;flex:1;min-width:0}
 .brand svg{flex:none}
+.brand>span:last-child{line-height:1.25}
 .logo{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--solar);color:#1A1200;box-shadow:0 0 22px rgba(255,180,30,.45);flex:none}
+.ib{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:var(--surface);border:1px solid var(--line);transition:.15s}
+.ib:hover{background:var(--surface2)}
+.ib svg{width:20px;height:20px}
+
+/* App Views System */
+.tab-content{display:none}
+.tab-content.active{display:block;animation:fadeIn 0.3s ease-in-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* Bottom Navigation Bar */
+.bottom-nav{position:fixed;bottom:0;inset-inline:0;z-index:100;background:rgba(7,18,35,0.92);backdrop-filter:blur(20px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav .nav-container{display:flex;justify-content:space-around;align-items:center;max-width:800px;margin:0 auto;height:68px;padding:0 8px}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);text-decoration:none;font-size:0.75rem;font-weight:500;padding:6px 10px;border-radius:16px;transition:all 0.2s;flex:1;text-align:center}
+.nav-item svg{width:22px;height:22px;transition:transform 0.2s}
+.nav-item.active{color:var(--sky);background:rgba(34,211,238,0.12);box-shadow:inset 0 0 12px rgba(34,211,238,0.15)}
+.nav-item.active svg{transform:scale(1.15)}
+
+/* Glass & Neon Cards */
+.content-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin-bottom:20px;box-shadow:var(--glow);position:relative;overflow:hidden}
+.content-card h2{font-size:1.4rem;color:var(--sky);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.content-card p{color:var(--text);font-size:0.98rem;line-height:1.8;margin-bottom:14px;text-align:justify}
+.content-card ul{list-style:none;padding:0}
+.content-card ul li{position:relative;padding-right:24px;margin-bottom:12px;color:var(--text);line-height:1.7}
+.content-card ul li::before{content:"•";position:absolute;right:4px;color:var(--sky);font-size:1.5rem;line-height:1}
+
+/* Status & Dashboard UI */
 .statusrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-top:14px}
 .upd{color:var(--muted);font-size:.8rem}
 .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:99px;background:var(--surface);border:1px solid var(--line);font-size:.8rem;color:var(--muted);white-space:nowrap}
@@ -46,23 +74,9 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 .pill[data-s=err] .dot{background:var(--bad)}
 .pill[data-s=wait] .dot{background:var(--sky);animation:blink 1s infinite}
 @keyframes blink{50%{opacity:.25}}
-.ib{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:var(--surface);border:1px solid var(--line);transition:.15s}
-.ib:hover{background:var(--surface2)}
-.ib svg{width:20px;height:20px}
 
-/* Bottom Navigation */
-.bottom-nav{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:99;width:calc(100% - 24px);max-width:620px;background:rgba(10,24,48,0.85);backdrop-filter:blur(20px);border:1px solid rgba(34,211,238,0.3);border-radius:24px;padding:8px 12px;box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 15px rgba(34,211,238,0.2)}
-.nav-container{display:flex;justify-content:space-between;align-items:center;gap:4px}
-.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;padding:6px 0;border-radius:16px;color:var(--muted);font-size:0.72rem;font-weight:600;transition:all 0.3s ease;text-decoration:none}
-.nav-btn svg{width:20px;height:20px;transition:all 0.3s ease}
-.nav-btn:hover,.nav-btn.active{color:var(--sky);text-shadow:0 0 8px rgba(34,211,238,0.6)}
-.nav-btn:hover svg,.nav-btn.active svg{stroke:var(--sky);filter:drop-shadow(0 0 6px rgba(34,211,238,0.8));transform:translateY(-2px)}
-
-/* Hero Section */
 .hero{display:grid;gap:22px;padding:28px 0 8px;grid-template-columns:1fr}
 .lbl{color:var(--muted);font-size:1.05rem;font-weight:500}
-.hero-copy h1{font-size:clamp(1.8rem,5.4vw,3rem);line-height:1.25;font-weight:700;letter-spacing:-.01em}
-.hero-copy p{color:var(--muted);margin-top:12px;max-width:52ch;font-size:1rem}
 .total{margin-top:22px;display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
 .total .big{font-size:clamp(3.2rem,12vw,5.6rem);font-weight:700;line-height:1;background:var(--solar);-webkit-background-clip:text;background-clip:text;color:transparent}
 .ring{position:relative;width:96px;height:96px;margin-inline-start:auto;flex:none}
@@ -89,17 +103,17 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 .bldg text{font-family:inherit;fill:var(--muted);pointer-events:none}
 .bldg .flabel{font-size:12px;font-weight:600}
 
-/* Text Content Sections */
-section{padding:30px 0 4px;scroll-margin-top:70px}
+/* Sections */
+section{padding:20px 0 4px}
 .sh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:14px}
-.sh h2{font-size:1.3rem;font-weight:700;color:var(--sky)}
+.sh h2{font-size:1.3rem;font-weight:700}
 .sh p{color:var(--muted);font-size:.85rem}
 .grid{display:grid;gap:14px;grid-template-columns:1fr}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;position:relative;overflow:hidden}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;position:relative;overflow:hidden;scroll-margin-top:80px}
 .card::before{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:4px;background:var(--c,#666)}
-.content-box{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;line-height:1.8;font-size:0.98rem;color:#D5E5F5;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
-.content-box p{margin-bottom:12px}
-
+.card[data-s=alert]{border-color:rgba(255,92,122,.6);box-shadow:0 0 0 1px rgba(255,92,122,.25),0 12px 40px -18px rgba(255,92,122,.5)}
+.card.flash{animation:flash 1.4s}
+@keyframes flash{30%{box-shadow:0 0 0 3px var(--sky)}}
 .ch{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .ch h3{font-size:1.05rem;font-weight:600}
 .st{font-size:.74rem;padding:3px 10px;border-radius:99px;font-weight:600}
@@ -147,17 +161,8 @@ canvas#chart{width:100%;height:250px;display:block}
 .btn:hover{filter:brightness(1.1)}
 .btn:disabled{opacity:.5;cursor:default;filter:none}
 .row{display:flex;gap:8px;flex-wrap:wrap}
-footer{margin-top:40px;padding:26px 0 100px;border-top:1px solid var(--line);color:var(--muted);font-size:.84rem;text-align:center}
 
-.banner{margin-top:14px;background:rgba(255,182,39,.1);border:1px solid rgba(255,182,39,.35);color:#FFD98A;border-radius:16px;padding:10px 14px;font-size:.88rem;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.banner[hidden]{display:none}
-
-.codef{display:flex;align-items:center;gap:8px}
-.codef input{flex:1;min-width:0}
-.codef .cb{display:flex;gap:6px;flex:none}
-.codef .ib{width:50px;height:50px;border-radius:14px;flex:none}
-
-/* Team */
+/* Team Grid */
 .sup{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(255,214,10,.14),rgba(255,138,42,.08));border:1px solid rgba(255,200,40,.4);border-radius:22px;padding:16px 18px;margin-bottom:14px}
 .sup small{display:block;color:var(--muted);font-size:.78rem}
 .sup b{font-size:1.15rem}
@@ -168,319 +173,245 @@ footer{margin-top:40px;padding:26px 0 100px;border-top:1px solid var(--line);col
 @media(min-width:720px){.team{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:980px){.team{grid-template-columns:repeat(3,1fr)}}
 
-/* Login interface */
+/* Login Dialog */
 .login{display:none;min-height:100vh;place-items:center;padding:20px}
 .locked .login{display:grid}
 .locked>header,.locked>main,.locked>.bottom-nav{display:none}
 .lcard{width:min(100%,420px);background:linear-gradient(180deg,rgba(16,36,71,.85),rgba(8,20,40,.9));border:1px solid var(--line);border-radius:28px;padding:34px 24px 26px;text-align:center;box-shadow:0 30px 80px -30px rgba(0,190,255,.35)}
 .lcard .logo{width:68px;height:68px;border-radius:22px;margin:0 auto 14px}
-.lcard h1{font-size:1.5rem;font-weight:700}
+.lcard h1{font-size:1.7rem;font-weight:700}
 .lcard .sub{color:var(--muted);margin:2px 0 22px}
 .fld{position:relative;margin-bottom:12px}
 .fld input[type=text],.fld input[type=password]{width:100%;background:#050E1C;border:1px solid rgba(60,190,255,.22);border-radius:18px;color:var(--text);padding:16px 54px 16px 56px;font:inherit;direction:ltr;text-align:right}
 .fld input:focus{outline:2px solid var(--sky);border-color:transparent}
-.fld>svg{position:absolute;inset-inline-start:auto;right:18px;top:50%;translate:0 -50%;width:20px;height:20px;color:var(--muted);pointer-events:none}
+.fld>svg{position:absolute;right:18px;top:50%;translate:0 -50%;width:20px;height:20px;color:var(--muted);pointer-events:none}
 .fld .ib{position:absolute;left:6px;top:50%;translate:0 -50%;width:42px;height:42px;border-radius:13px}
-.livebox{flex-basis:100%;background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:12px;color:var(--text)}
-.livebox.solo{margin-top:14px}
-.livebox h4{font-size:.92rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.livebox .lst{display:grid;gap:8px;max-height:230px;overflow:auto}
-.li{border:1px solid rgba(255,77,109,.55);background:rgba(255,77,109,.09);border-radius:12px;padding:10px 12px;font-size:.88rem;color:#FFD3DB}
-.li b{display:block;color:#fff}
-.li small{color:var(--muted);font-size:.74rem}
-.livebox .none{color:var(--ok);font-size:.88rem;display:flex;align-items:center;gap:8px}
 .lerr{color:#FFB3C1;background:rgba(255,77,109,.12);border-radius:12px;padding:8px 12px;font-size:.86rem;margin-bottom:12px}
 .lcard .btn.pri{width:100%;padding:16px;border-radius:18px;font-size:1.02rem;margin-top:4px}
 .lnote{color:var(--muted);font-size:.8rem;margin-top:18px}
 
-#toasts{position:fixed;top:calc(74px + env(safe-area-inset-top));inset-inline:12px;display:grid;gap:8px;z-index:60;pointer-events:none;max-width:460px;margin-inline:auto}
-.toast{pointer-events:auto;background:#2A0F1D;border:1px solid var(--bad);color:#FFD3DB;border-radius:16px;padding:12px 16px;font-size:.92rem;box-shadow:0 18px 50px -12px rgba(255,92,122,.5)}
-
+/* Dialog & Toasts */
 dialog{margin:auto;border:1px solid rgba(34,211,238,.5);background:#0A1830;color:var(--text);border-radius:28px;width:min(94vw,520px);max-height:92vh;padding:0;overflow:hidden}
 dialog::backdrop{background:rgba(3,5,14,.7);backdrop-filter:blur(6px)}
 .dg{padding:22px;max-height:92vh;overflow:auto}
 .dg h2{font-size:1.5rem;margin-bottom:16px}
-.dg h4{font-size:.95rem;margin:22px 0 4px;color:var(--violet)}
 .tabs{display:grid;grid-template-columns:1fr 1fr;background:#050E1C;border-radius:18px;padding:5px;gap:4px}
 .tabs button{padding:12px;border-radius:14px;color:var(--muted);font-weight:600}
 .tabs button[aria-selected=true]{background:var(--grad);color:#08102A}
 label{display:block;color:var(--muted);font-size:.85rem;margin:14px 0 6px}
 input[type=text],input[type=password],input[type=number]{width:100%;background:#050E1C;border:1px solid rgba(60,190,255,.22);border-radius:16px;color:var(--text);padding:14px 16px;font:inherit;direction:ltr;text-align:left}
-input:focus{outline:2px solid var(--sky);border-color:transparent}
-.hint{color:var(--muted);font-size:.78rem;margin-top:6px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.sw{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:.92rem}
-.sw input{appearance:none;width:46px;height:26px;border-radius:99px;background:#1E3A5F;position:relative;cursor:pointer;flex:none;transition:.2s}
-.sw input::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
-.sw input:checked{background:var(--ok)}
-.sw input:checked::after{inset-inline-start:23px}
+.codef{display:flex;align-items:center;gap:8px}
+.codef input{flex:1;min-width:0}
+.codef .cb{display:flex;gap:6px;flex:none}
 .acts{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-top:22px}
 .acts .btn{padding:16px;border-radius:20px;font-size:1rem}
+#toasts{position:fixed;top:calc(74px + env(safe-area-inset-top));inset-inline:12px;display:grid;gap:8px;z-index:60;pointer-events:none;max-width:460px;margin-inline:auto}
+.toast{pointer-events:auto;background:#2A0F1D;border:1px solid var(--bad);color:#FFD3DB;border-radius:16px;padding:12px 16px;font-size:.92rem;box-shadow:0 18px 50px -12px rgba(255,92,122,.5)}
+
+@media(min-width:720px){.grid{grid-template-columns:repeat(2,1fr)}.cmp{grid-template-columns:1fr 1fr}}
+@media(min-width:980px){.hero{padding-top:24px}.grid{grid-template-columns:repeat(3,1fr)}}
 [hidden]{display:none!important}
-
-@media(min-width:720px){
-  .grid{grid-template-columns:repeat(2,1fr)}
-  .cmp{grid-template-columns:1fr 1fr}
-}
-@media(min-width:980px){
-  .hero{padding-top:44px}
-  .grid{grid-template-columns:repeat(3,1fr)}
-}
-
-input[type="password"]::-ms-reveal,
-input[type="password"]::-ms-clear{display:none;}
 </style>
 </head>
 <body class="locked">
 
+<!-- Header Top Bar -->
 <header class="top">
   <div class="wrap">
     <div class="brand">
-      <span class="logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M13.6 2 5 13.6h5.6L9.6 22 19 9.8h-5.7z"/></svg></span>
+      <span class="logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M13.6 2 5 13.6h5.6L9.6 22 19 9.8h-5.7z"/></svg></span>
       <span>مبنى الطاقة بالرقائق الشفافة</span>
     </div>
-    <button class="ib" id="bellBtn" aria-label="تفعيل إشعارات المتصفح" title="تفعيل الإشعارات">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10.3 21a2 2 0 0 0 3.4 0"/></svg>
-    </button>
-    <button class="ib" id="setBtn" aria-label="إعدادات الاتصال">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-    </button>
-    <button class="ib" id="devBtn" aria-label="الأجهزة">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-    </button>
+    <button class="ib" id="bellBtn" aria-label="تفعيل الإشعارات"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10.3 21a2 2 0 0 0 3.4 0"/></svg></button>
+    <button class="ib" id="setBtn" aria-label="الإعدادات"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l-.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l-.1-.1a2 2 0 1 1 2.8 2.8l.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
   </div>
 </header>
-
-<!-- Bottom Navigation Bar -->
-<nav class="bottom-nav">
-  <div class="nav-container">
-    <a href="#sec-main" class="nav-btn active">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span>الرئيسية</span>
-    </a>
-    <a href="#sec-intro" class="nav-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-      <span>المقدمة</span>
-    </a>
-    <a href="#sec-explain" class="nav-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      <span>الشرح</span>
-    </a>
-    <a href="#sec-benefits" class="nav-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      <span>الفوائد</span>
-    </a>
-    <a href="#sec-outro" class="nav-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-      <span>الخاتمة</span>
-    </a>
-    <a href="#sec-team" class="nav-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      <span>الفريق</span>
-    </a>
-  </div>
-</nav>
-
-<dialog id="devDlg">
-  <div class="dg">
-    <h2>الأجهزة</h2>
-    <p class="hint">الأجهزة المضافة على هذا المتصفح. اضغط "استخدام" للتبديل.</p>
-    <div id="devList" style="display:grid;gap:8px;margin-top:14px"></div>
-    <h4>إضافة جهاز</h4>
-    <label for="devName">اسم الجهاز (اختياري)</label>
-    <input type="text" id="devName" placeholder="مثلاً: مبنى الكلية">
-    <label for="devId">رمز المبنى</label>
-    <input type="text" id="devId" autocomplete="off" spellcheck="false">
-    <div class="acts">
-      <button class="btn pri" id="devAdd">إضافة</button>
-      <button class="btn" id="devClose">إغلاق</button>
-    </div>
-  </div>
-</dialog>
 
 <!-- Login Screen -->
 <div id="login" class="login">
   <form id="lform" class="lcard" novalidate>
-    <span class="logo"><svg viewBox="0 0 24 24" width="34" height="34" fill="currentColor" aria-hidden="true"><path d="M13.6 2 5 13.6h5.6L9.6 22 19 9.8h-5.7z"/></svg></span>
+    <span class="logo"><svg viewBox="0 0 24 24" width="34" height="34" fill="currentColor"><path d="M13.6 2 5 13.6h5.6L9.6 22 19 9.8h-5.7z"/></svg></span>
     <h1>مبنى الطاقة بالرقائق الشفافة</h1>
     <p class="sub">لوحة مراقبة الطاقة الذكية</p>
-    <div class="fld">
-      <input type="text" id="lEmail" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="البريد الإلكتروني" aria-label="البريد الإلكتروني">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-    </div>
-    <div class="fld">
-      <input type="password" id="lPass" autocomplete="current-password" placeholder="كلمة المرور (13 حرفاً على الأقل)" aria-label="كلمة المرور">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-      <button type="button" class="ib" id="lEye" aria-label="إظهار أو إخفاء كلمة المرور">
-        <!-- SVG أصلية مغلقة مغطاة رمش بشكل افتراضي -->
-        <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-          <line x1="1" y1="1" x2="23" y2="23"/>
-        </svg>
-      </button>
-    </div>
+    <div class="fld"><input type="text" id="lEmail" value="team@solar.iq" placeholder="البريد الإلكتروني"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
+    <div class="fld"><input type="password" id="lPass" placeholder="كلمة المرور (13 حرفاً على الأقل)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><button type="button" class="ib" id="lEye"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
     <p class="lerr" id="lErr" hidden></p>
     <button class="btn pri" type="submit">تسجيل الدخول</button>
     <p class="lnote">الدخول مخصص لفريق المشروع فقط</p>
   </form>
 </div>
 
-<main class="wrap" id="sec-main">
-  <div class="statusrow"><div class="pill" id="conn" data-s="wait"><i class="dot"></i><span id="connTxt">جارٍ الاتصال</span></div><span class="upd" id="upd"></span></div>
-  <div class="banner" id="demoBanner" hidden>
-    <span>أنت تشاهد بيانات تجريبية مُحاكاة. للربط بالمجسم الحقيقي افتح الإعدادات وأدخل بيانات الاتصال.</span>
-    <div class="row"><button class="btn" id="demoDrop">محاكاة انخفاض في طابق</button><button class="btn" id="demoReset" hidden>إعادة الوضع الطبيعي</button></div>
-    <p class="hint" id="demoMsg" hidden style="flex-basis:100%;color:var(--sky);font-weight:600"></p>
-    <div class="livebox" id="liveBox"></div>
-  </div>
-  <div class="livebox solo" id="liveSolo" hidden></div>
+<!-- Main Application Tabs Content -->
+<main class="wrap">
 
-  <div class="hero">
-    <div class="hero-copy">
-      <p class="lbl">الطاقة المنتجة الآن</p>
-      <div class="total"><span class="big num" id="totP">0.0</span><span class="unit" id="totU">مللي واط</span>
-        <div class="ring" title="كفاءة النظام كله"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="rg" x1="0" x2="1"><stop stop-color="#19E6FF"/><stop offset="1" stop-color="#2F8CFF"/></linearGradient></defs><circle class="rb" cx="50" cy="50" r="42"/><circle id="ringF" class="rf" cx="50" cy="50" r="42" pathLength="100" stroke-dasharray="0 100"/></svg><b class="num" id="ringT">0%</b><small>كفاءة النظام</small></div></div>
-      <div class="kpis">
-        <div class="kpi"><small>طاقة الواجهة</small><b class="num" id="kFacade">0</b><i>مللي واط</i></div>
-        <div class="kpi"><small>طاقة السطح</small><b class="num" id="kRoof">0</b><i>مللي واط</i></div>
-        <div class="kpi"><small>الطاقة المتراكمة</small><b class="num" id="kWh">0</b><i>مللي واط ساعة</i></div>
+  <!-- 1. TAB: Dashboard / Main Data -->
+  <div id="tab-dashboard" class="tab-content active">
+    <div class="statusrow">
+      <div class="pill" id="conn" data-s="wait"><i class="dot"></i><span id="connTxt">جارٍ الاتصال</span></div>
+      <span class="upd" id="upd"></span>
+    </div>
+
+    <div class="banner" id="demoBanner" hidden>
+      <span>أنت تشاهد بيانات تجريبية مُحاكاة. للربط بالمجسم الحقيقي افتح الإعدادات وأدخل بيانات الاتصال.</span>
+      <div class="row"><button class="btn" id="demoDrop">محاكاة انخفاض في طابق</button><button class="btn" id="demoReset" hidden>إعادة الوضع الطبيعي</button></div>
+      <p class="hint" id="demoMsg" hidden style="flex-basis:100%;color:var(--sky);font-weight:600"></p>
+      <div class="livebox" id="liveBox"></div>
+    </div>
+    <div class="livebox solo" id="liveSolo" hidden></div>
+
+    <div class="hero">
+      <div class="hero-copy">
+        <p class="lbl">الطاقة المنتجة الآن</p>
+        <div class="total">
+          <span class="big num" id="totP">0.0</span><span class="unit" id="totU">مللي واط</span>
+          <div class="ring" title="كفاءة النظام">
+            <svg viewBox="0 0 100 100"><defs><linearGradient id="rg" x1="0" x2="1"><stop stop-color="#19E6FF"/><stop offset="1" stop-color="#2F8CFF"/></linearGradient></defs><circle class="rb" cx="50" cy="50" r="42"/><circle id="ringF" class="rf" cx="50" cy="50" r="42" pathLength="100" stroke-dasharray="0 100"/></svg>
+            <b class="num" id="ringT">0%</b><small>كفاءة النظام</small>
+          </div>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><small>طاقة الواجهة</small><b class="num" id="kFacade">0</b><i>مللي واط</i></div>
+          <div class="kpi"><small>طاقة السطح</small><b class="num" id="kRoof">0</b><i>مللي واط</i></div>
+          <div class="kpi"><small>الطاقة المتراكمة</small><b class="num" id="kWh">0</b><i>مللي واط ساعة</i></div>
+        </div>
       </div>
     </div>
+
+    <section>
+      <div class="sh"><h2>مخطط المبنى</h2><p>انقر على أي طابق للانتقال إلى تفاصيله</p></div>
+      <div class="bldg">
+        <svg viewBox="0 0 240 372">
+          <g class="flr" id="flr-r" data-target="card-r"><rect class="body" x="20" y="6" width="200" height="46" rx="10" fill="#0F2038" stroke="rgba(255,214,10,.35)" stroke-width="1.5"/><rect class="win" x="35" y="16" width="50" height="20" rx="3" fill="#FFD60A" style="fill-opacity:.6"/><rect class="win" x="95" y="16" width="50" height="20" rx="3" fill="#FFD60A" style="fill-opacity:.6"/><rect class="win" x="155" y="16" width="50" height="20" rx="3" fill="#FFD60A" style="fill-opacity:.6"/><text class="flabel" x="120" y="46" text-anchor="middle">السطح</text></g>
+          <g class="flr" id="flr-4" data-target="card-4"><rect class="body" x="20" y="58" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/><rect class="win" x="35" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/><rect class="win" x="75" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/><rect class="win" x="127" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/><rect class="win" x="167" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/><text class="flabel" x="120" y="106" text-anchor="middle">5</text></g>
+          <g class="flr" id="flr-3" data-target="card-3"><rect class="body" x="20" y="118" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/><rect class="win" x="35" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/><rect class="win" x="75" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/><rect class="win" x="127" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/><rect class="win" x="167" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/><text class="flabel" x="120" y="166" text-anchor="middle">4</text></g>
+          <g class="flr" id="flr-2" data-target="card-2"><rect class="body" x="20" y="178" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/><rect class="win" x="35" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/><rect class="win" x="75" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/><rect class="win" x="127" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/><rect class="win" x="167" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/><text class="flabel" x="120" y="226" text-anchor="middle">3</text></g>
+          <g class="flr" id="flr-1" data-target="card-1"><rect class="body" x="20" y="238" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/><rect class="win" x="35" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/><rect class="win" x="75" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/><rect class="win" x="127" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/><rect class="win" x="167" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/><text class="flabel" x="120" y="286" text-anchor="middle">2</text></g>
+          <g class="flr" id="flr-0" data-target="card-0"><rect class="body" x="20" y="298" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/><rect class="win" x="35" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/><rect class="win" x="75" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/><rect class="win" x="127" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/><rect class="win" x="167" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/><text class="flabel" x="120" y="346" text-anchor="middle">1</text></g>
+          <rect x="10" y="358" width="220" height="8" rx="3" fill="#08132A"/>
+        </svg>
+      </div>
+    </section>
+
+    <section id="floors"><div class="sh"><h2>قراءات الطوابق</h2></div><div class="grid" id="cards"></div></section>
+    <section><div class="sh"><h2>مخطط بياني للطاقة</h2></div><div class="panel"><div class="legend" id="legend"></div><canvas id="chart"></canvas></div></section>
+    <section>
+      <div class="sh"><h2>مقارنة الأداء</h2></div>
+      <div class="panel">
+        <div class="cmp">
+          <div class="side"><h3>رقائق الواجهة الشفافة</h3><div class="v num" id="cmpF">0</div><div class="bl"><span>متوسط الكفاءة</span><b class="num" id="cmpFe">0%</b></div></div>
+          <div class="side"><h3>خلايا السطح</h3><div class="v num" id="cmpR">0</div><div class="bl"><span>الكفاءة</span><b class="num" id="cmpRe">0%</b></div></div>
+        </div>
+        <div class="share"><i id="shF" style="background:var(--violet);width:50%"></i><i id="shR" style="background:var(--sun);width:50%"></i></div>
+        <p class="verdict" id="verdict" style="margin-top:12px"></p>
+      </div>
+    </section>
+    <section>
+      <div class="sh"><h2>سجل التنبيهات</h2><button class="btn" id="clearLog">مسح السجل</button></div>
+      <div class="panel"><div class="alist" id="alog"><p class="empty">لا توجد تنبيهات. كل شيء يعمل بشكل طبيعي.</p></div></div>
+    </section>
   </div>
 
-  <section id="bldgSec">
-    <div class="sh"><h2>مخطط المبنى</h2><p>اضغط على أي طابق للانتقال إلى بياناته</p></div>
-    <div class="bldg">
-      <svg viewBox="0 0 240 372" role="img" aria-label="مخطط تفاعلي لمبنى الطاقة">
-        <g class="flr" id="flr-r" data-target="card-r" role="button" tabindex="0" aria-label="السطح: الخلايا الشمسية">
-          <rect class="body" x="20" y="6" width="200" height="46" rx="10" fill="#0F2038" stroke="rgba(255,214,10,.35)" stroke-width="1.5"/>
-          <rect class="win" x="35" y="16" width="50" height="20" rx="3" fill="#FFD60A" style="fill-opacity:.6"/>
-          <rect class="win" x="95" y="16" width="50" height="20" rx="3" fill="#FFD60A" style="fill-opacity:.6"/>
-          <rect class="win" x="155" y="16" width="50" height="20" rx="3" fill="#FFD60A" style="fill-opacity:.6"/>
-          <text class="flabel" x="120" y="46" text-anchor="middle">السطح</text>
-        </g>
-        <g class="flr" id="flr-4" data-target="card-4" role="button" tabindex="0">
-          <rect class="body" x="20" y="58" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/>
-          <rect class="win" x="35" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/>
-          <rect class="win" x="75" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/>
-          <rect class="win" x="127" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/>
-          <rect class="win" x="167" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/>
-          <text class="flabel" x="120" y="106" text-anchor="middle">5</text>
-        </g>
-        <g class="flr" id="flr-3" data-target="card-3" role="button" tabindex="0">
-          <rect class="body" x="20" y="118" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/>
-          <rect class="win" x="35" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/>
-          <rect class="win" x="75" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/>
-          <rect class="win" x="127" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/>
-          <rect class="win" x="167" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/>
-          <text class="flabel" x="120" y="166" text-anchor="middle">4</text>
-        </g>
-        <g class="flr" id="flr-2" data-target="card-2" role="button" tabindex="0">
-          <rect class="body" x="20" y="178" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/>
-          <rect class="win" x="35" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/>
-          <rect class="win" x="75" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/>
-          <rect class="win" x="127" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/>
-          <rect class="win" x="167" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/>
-          <text class="flabel" x="120" y="226" text-anchor="middle">3</text>
-        </g>
-        <g class="flr" id="flr-1" data-target="card-1" role="button" tabindex="0">
-          <rect class="body" x="20" y="238" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/>
-          <rect class="win" x="35" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/>
-          <rect class="win" x="75" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/>
-          <rect class="win" x="127" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/>
-          <rect class="win" x="167" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/>
-          <text class="flabel" x="120" y="286" text-anchor="middle">2</text>
-        </g>
-        <g class="flr" id="flr-0" data-target="card-0" role="button" tabindex="0">
-          <rect class="body" x="20" y="298" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/>
-          <rect class="win" x="35" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/>
-          <rect class="win" x="75" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/>
-          <rect class="win" x="127" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/>
-          <rect class="win" x="167" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/>
-          <text class="flabel" x="120" y="346" text-anchor="middle">1</text>
-        </g>
-        <rect x="10" y="358" width="220" height="8" rx="3" fill="#08132A"/>
-      </svg>
-      <p class="cap">٥ طوابق × رقيقتان لكل نافذة × نافذتان للطابق = ٤ رقائق لكل طابق، أي ٢٠ رقيقة على كامل الواجهة</p>
+  <!-- 2. TAB: Introduction -->
+  <div id="tab-intro" class="tab-content">
+    <div class="content-card" style="margin-top: 20px;">
+      <h2>مقدمة المشروع</h2>
+      <p>في ظل التوجه العالمي نحو العمارة المستدامة وتقنيات المباني صفرية الطاقة، يبرز التحدي الأكبر في كيفية رفع كفاءة توليد الطاقة الذاتية وإدارتها داخل المنشآت الحديثة.</p>
+      <p>تشير البيانات العلمية المعتمدة في قطاع الطاقة إلى أن المباني مسؤولة عن جزء كبير من الاستهلاك العالمي للكهرباء والانبعاثات الكربونية.</p>
+      <p>يتناول هذا المشروع تقديم حل هندسي يتكامل فيه التوليد المباشر للطاقة عبر الخلايا الشمسية مع نظام مراقبة ذكي يعتمد على تقنيات إنترنت الأشياء ومتحكم ESP32 للتحكم الدقيق وللحد من الضياعات وتحسين الأداء التشغيلي للمبنى.</p>
     </div>
-  </section>
+  </div>
 
-  <!-- Sections with academic text -->
-  <section id="sec-intro">
-    <div class="sh"><h2>مقدمة المشروع</h2></div>
-    <div class="content-box">
-      <p>في ظل التوجه العالمي نحو العمارة المستدامة وتقنيات المباني صفرية الطاقة، يبرز التحدي الأكبر في كيفية رفع كفاءة توليد الطاقة الذاتية وإدارتها داخل المنشآت الحديثة. تشير البيانات العلمية المعتمدة في قطاع الطاقة إلى أن المباني مسؤولة عن جزء كبير من الاستهلاك العالمي للكهرباء والانبعاثات الكربونية. يتناول هذا المشروع تقديم حل هندسي يتكامل فيه التوليد المباشر للطاقة عبر الخلايا الشمسية مع نظام مراقبة ذكي يعتمد على تقنيات إنترنت الأشياء ومتحكم esp32 للتحكم الدقيق وللحد من الضياعات وتحسين الاداء التشغيلي للمبنى.</p>
-    </div>
-  </section>
-
-  <section id="sec-explain">
-    <div class="sh"><h2>شرح المشروع</h2></div>
-    <div class="content-box">
+  <!-- 3. TAB: Project Explanation -->
+  <div id="tab-explain" class="tab-content">
+    <div class="content-card" style="margin-top: 20px;">
+      <h2>شرح المشروع</h2>
       <p>يقدم هذا المشروع دراسة تقييمية وتحليلية مقارنة بين تقنيتين رئيسيتين لتوليد الطاقة الشمسية في المباني:</p>
-      <p>أنظمة الخلايا الشمسية على الأسطح: اعتمدت الدراسة على تقنيات السليكون الكريستالي التقليدية التي تتميز بتقديم أعلى معدلات كفاءة تحويل للقدرة الكهربائية، إلا أن استطاعتها التوليدية تظل محددة بحدود المساحة السطحية المتاحة للمبنى وتأثرها بالارتفاع الحراري.</p>
-      <p>الرقائق الشمسية الشفافة المدمجة بالزجاج: تعتمد هذه التقنية الحديثة على نفاذ الضوء المرئي مع امتصاص الطيف غير المرئي من الأشعة الشمسية، مما يسمح باستغلال الواجهات والنوافذ الزجاجية كعناصر مولدة للطاقة دون التأثير على الإضاءة الطبيعية.</p>
-      <p>منظومة التحكم والرصد الذكي: يتم متابعة قراءات الجهد والتيار والقدرة الكلية للمنظومتين بشكل لحظي عبر متحكم esp32 حيث يتم معالجة البيانات ونقلها عبر بروتوكولات الاتصال الحديثة لتعرض مباشرة على تطبيق الويب التفاعلي للتحكم والمراقبة.</p>
+      <ul>
+        <li><strong>أنظمة الخلايا الشمسية على الأسطح:</strong> اعتمدت الدراسة على تقنيات السليكون الكريستالي التقليدية التي تتميز بتقديم أعلى معدلات كفاءة تحويل للقدرة الكهربائية، إلا أن استطاعتها التوليدية تظل محددة بحدود المساحة السطحية المتاحة للمبنى وتأثرها بالارتفاع الحراري.</li>
+        <li><strong>الرقائق الشمسية الشفافة المدمجة بالزجاج:</strong> تعتمد هذه التقنية الحديثة على نفاذ الضوء المرئي مع امتصاص الطيف غير المرئي من الأشعة الشمسية، مما يسمح باستغلال الواجهات والنوافذ الزجاجية كعناصر مولدة للطاقة دون التأثير على الإضاءة الطبيعية.</li>
+        <li><strong>منظومة التحكم والرصد الذكي:</strong> يتم متابعة قراءات الجهد والتيار والقدرة الكلية للمنظومتين بشكل لحظي عبر متحكم ESP32 حيث يتم معالجة البيانات ونقلها عبر بروتوكولات الاتصال الحديثة لتعرض مباشرة على تطبيق الويب التفاعلي للتحكم والمراقبة.</li>
+      </ul>
     </div>
-  </section>
+  </div>
 
-  <section id="floors">
-    <div class="sh"><h2>بيانات الطوابق الحية</h2><p>الفولتية والتيار والطاقة والكفاءة لكل طابق</p></div>
-    <div class="grid" id="cards"></div>
-  </section>
-
-  <section>
-    <div class="sh"><h2>الطاقة خلال الدقائق الأخيرة</h2><p>مللي واط</p></div>
-    <div class="panel">
-      <div class="legend" id="legend"></div>
-      <canvas id="chart" aria-label="مخطط خطي لطاقة كل طابق"></canvas>
+  <!-- 4. TAB: Benefits -->
+  <div id="tab-benefits" class="tab-content">
+    <div class="content-card" style="margin-top: 20px;">
+      <h2>فوائد المشروع</h2>
+      <ul>
+        <li><strong>التكامل والاستغلال الأمثل للمساحات:</strong> بالرغم من أن كفاءة التوليد المباشرة للرقائق الشفافة تعتبر أقل من الألواح التقليدية، إلا أن استغلال مساحات الواجهات الزجاجية الممتدة في المباني العالية يعوض هذا الفارق ويزيد من إجمالي الطاقة المنتجة.</li>
+        <li><strong>خفض الأحمال الحرارية للتكييف:</strong> تعمل الرقائق الشفافة كحاجز حراري يقلل من دخول الحرارة عبر النوافذ الزجاجية مما يؤدي إلى تقليل استهلاك الطاقة في أنظمة التكييف والتهوية داخل المبنى.</li>
+        <li><strong>الاستدامة والجدوى البيئية:</strong> يسهم الدمج بين التوليد السطحي والتوليد الموزع على الواجهات في تقليل البصمة الكربونية وتوفير مصدر طاقة نظيف ومستدام يخدم بنية المبنى الذكي.</li>
+      </ul>
     </div>
-  </section>
+  </div>
 
-  <section id="sec-benefits">
-    <div class="sh"><h2>فوائد المشروع</h2></div>
-    <div class="content-box">
-      <p>التكامل والاستغلال الأمثل للمساحات: بالرغم من أن كفاءة التوليد المباشرة للرقائق الشفافة تعتبر أقل من الألواح التقليدية إلا أن استغلال مساحات الواجهات الزجاجية الممتدة في المباني العالية يعوض هذا الفارق ويزيد من إجمالي الطاقة المنتجة.</p>
-      <p>خفض الأحمال الحرارية للتكييف: تعمل الرقائق الشفافة كحاجز حراري يقلل من دخول الحرارة عبر النوافذ الزجاجية مما يؤدي إلى تقليل استهلاك الطاقة في أنظمة التكييف والتهوية داخل المبنى.</p>
-      <p>الاستدامة والجدوى البيئية: يسهم الدمج بين التوليد السطحي والتوليد الموزع على الواجهات في تقليل البصمة الكربونية وتوفير مصدر طاقة نظيف ومستدام يخدم بنية المبنى الذكي.</p>
+  <!-- 5. TAB: Conclusion -->
+  <div id="tab-conclusion" class="tab-content">
+    <div class="content-card" style="margin-top: 20px;">
+      <h2>الخاتمة</h2>
+      <p>أثبتت الدراسة العملية والتحليلية للمشروع أن الجمع بين الألواح الشمسية عالية الكفاءة على الأسطح والرقائق الشفافة على الواجهات يمثل حلاً هندسياً متكاملاً للمباني المستدامة.</p>
+      <p>كما أثبتت منظومة المراقبة المعززة بالمتحكم ESP32 كفاءة عالية في رصد البيانات لحظياً وتوفير تنبيهات فورية مما يوفر منصة متكاملة لمتابعة الأداء وضمان الاستغلال الأمثل للطاقة.</p>
     </div>
-  </section>
+  </div>
 
-  <section>
-    <div class="sh"><h2>مقارنة: رقائق الزجاج مقابل خلايا السطح</h2></div>
-    <div class="panel">
-      <div class="cmp">
-        <div class="side"><h3>رقائق الواجهة الشفافة</h3><p>مجموع الطوابق الخمسة</p><div class="v num" id="cmpF">0</div><div class="bl"><span>متوسط الكفاءة</span><b class="num" id="cmpFe">0%</b></div></div>
-        <div class="side"><h3>الخلايا الشمسية على السطح</h3><p>خلايا مونو تقليدية</p><div class="v num" id="cmpR">0</div><div class="bl"><span>الكفاءة</span><b class="num" id="cmpRe">0%</b></div></div>
-      </div>
-      <div class="share" aria-hidden="true"><i id="shF" style="background:var(--violet);width:50%"></i><i id="shR" style="background:var(--sun);width:50%"></i></div>
-      <div class="bl"><span>حصة الواجهة من الإجمالي</span><span>حصة السطح</span></div>
-      <p class="verdict" id="verdict"></p>
-    </div>
-  </section>
-
-  <section id="sec-outro">
-    <div class="sh"><h2>الخاتمة</h2></div>
-    <div class="content-box">
-      <p>أثبتت الدراسة العملية والتحليلية للمشروع أن الجمع بين الألواح الشمسية عالية الكفاءة على الأسطح والرقائق الشفافة على الواجهات يمثل حلاً هندسياً متكاملاً للمباني المستدامة كما أثبتت منظومة المراقبة المعززة بالمتحكم esp32 كفاءة عالية في رصد البيانات لحظياً وتوفير تنبيهات فورية مما يوفر منصة متكاملة لمتابعة الأداء وضمان الاستغلال الأمثل للطاقة.</p>
-    </div>
-  </section>
-
-  <section>
-    <div class="sh"><h2>سجل التنبيهات</h2><button class="btn" id="clearLog">مسح السجل</button></div>
-    <div class="panel"><div class="alist" id="alog"><p class="empty">لا توجد تنبيهات. كل شيء يعمل بشكل طبيعي.</p></div></div>
-  </section>
-
-  <section id="sec-team">
-    <div class="sh"><h2>فريق المشروع</h2><p>مشروع تخرج</p></div>
+  <!-- 6. TAB: Team -->
+  <div id="tab-team" class="tab-content">
+    <div class="sh" style="margin-top: 20px;"><h2>فريق المشروع</h2><p>مشروع تخرج</p></div>
     <div class="sup"><span class="av" style="--c:#FFD60A">د</span><div><small>الإشراف على المشروع</small><b>د. بيادر عبد الرزاق</b></div></div>
-    <div class="panel"><h3 class="th">الطلبة</h3><ul class="team"><li style="--c:#00E5FF"><span class="av">م</span>مقتدى ثائر زكي</li><li style="--c:#5B8CFF"><span class="av">ع</span>علي أحمد خير الله</li><li style="--c:#19F5A4"><span class="av">ع</span>علي حيدر جاسم محمد</li><li style="--c:#B388FF"><span class="av">م</span>محمد علي عيدان ناصر</li><li style="--c:#FF8A2A"><span class="av">س</span>سيف نبراس مهدي سلمان</li><li style="--c:#00E5FF"><span class="av">ع</span>عباس فوزي عبدالله عباس</li><li style="--c:#5B8CFF"><span class="av">ك</span>كوثر فراس عبد الجبار عبدالنبي</li><li style="--c:#19F5A4"><span class="av">م</span>مريم عبد الرحمن سلطان غدير</li><li style="--c:#B388FF"><span class="av">ر</span>رند وضاء مزهر حسن</li><li style="--c:#FF8A2A"><span class="av">أ</span>أحمد رعد عبد الرزاق عبود</li></ul></div>
-  </section>
+    <div class="panel">
+      <h3 class="th">الطلبة (10 طلاب)</h3>
+      <ul class="team">
+        <li style="--c:#00E5FF"><span class="av">م</span>مقتدى ثائر زكي</li>
+        <li style="--c:#5B8CFF"><span class="av">ع</span>علي أحمد خير الله</li>
+        <li style="--c:#19F5A4"><span class="av">ع</span>علي حيدر جاسم محمد</li>
+        <li style="--c:#B388FF"><span class="av">م</span>محمد علي عيدان ناصر</li>
+        <li style="--c:#FF8A2A"><span class="av">س</span>سيف نبراس مهدي سلمان</li>
+        <li style="--c:#00E5FF"><span class="av">ع</span>عباس فوزي عبدالله عباس</li>
+        <li style="--c:#5B8CFF"><span class="av">ك</span>كوثر فراس عبد الجبار عبدالنبي</li>
+        <li style="--c:#19F5A4"><span class="av">م</span>مريم عبد الرحمن سلطان غدير</li>
+        <li style="--c:#B388FF"><span class="av">ر</span>رند وضاء مزهر حسن</li>
+        <li style="--c:#FF8A2A"><span class="av">أ</span>أحمد رعد عبد الرزاق عبود</li>
+      </ul>
+    </div>
+    <div style="margin-top:20px;text-align:center">
+      <button class="btn" id="logoutBtn" style="background:var(--bad);color:#fff">تسجيل الخروج</button>
+    </div>
+  </div>
 
-  <footer>مشروع تخرج: توليد الطاقة الكهربائية من زجاج الواجهات بالرقائق الشفافة، مراقبة عبر ESP32</footer>
 </main>
 
-<div id="toasts" aria-live="assertive"></div>
+<!-- Bottom Navigation Bar Icons -->
+<nav class="bottom-nav">
+  <div class="nav-container">
+    <a href="#" class="nav-item active" data-tab="tab-dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+      <span>الرئيسية</span>
+    </a>
+    <a href="#" class="nav-item" data-tab="tab-intro">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-73-8-3-7 7 3 8z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+      <span>المقدمة</span>
+    </a>
+    <a href="#" class="nav-item" data-tab="tab-explain">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span>الشرح</span>
+    </a>
+    <a href="#" class="nav-item" data-tab="tab-benefits">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>
+      <span>الفوائد</span>
+    </a>
+    <a href="#" class="nav-item" data-tab="tab-conclusion">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <span>الخاتمة</span>
+    </a>
+    <a href="#" class="nav-item" data-tab="tab-team">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span>الفريق</span>
+    </a>
+  </div>
+</nav>
 
+<!-- Settings Modal Dialog -->
 <dialog id="dlg">
   <div class="dg">
     <h2>إعدادات الاتصال</h2>
@@ -488,68 +419,52 @@ input[type="password"]::-ms-clear{display:none;}
       <button role="tab" id="tabNet" aria-selected="true">من أي مكان (إنترنت)</button>
       <button role="tab" id="tabLoc" aria-selected="false">شبكة محلية</button>
     </div>
-
     <div id="pNet">
       <label for="fUrl">عنوان الوسيط (WebSocket)</label>
-      <input type="text" id="fUrl" placeholder="wss://xxxx.s1.eu.hivemq.cloud:8884/mqtt" autocomplete="off" spellcheck="false">
+      <input type="text" id="fUrl" placeholder="wss://xxxx.s1.eu.hivemq.cloud:8884/mqtt">
       <label for="fUser">اسم المستخدم</label>
-      <input type="text" id="fUser" autocomplete="off" spellcheck="false">
+      <input type="text" id="fUser">
       <label for="fPass">كلمة المرور</label>
-      <div class="codef"><input type="password" id="fPass" autocomplete="off"><button type="button" class="ib" id="eyePass" aria-label="إظهار أو إخفاء كلمة المرور"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+      <div class="codef"><input type="password" id="fPass"><button type="button" class="ib" id="eyePass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
       <label for="fId">رمز المبنى (سري)</label>
-      <div class="codef">
-        <input type="password" id="fId" autocomplete="off" spellcheck="false" aria-describedby="copyMsg">
-        <div class="cb">
-          <button type="button" class="ib" id="eyeBtn" aria-label="إظهار أو إخفاء الرمز"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
-          <button type="button" class="ib" id="copyBtn" aria-label="نسخ الرمز"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>
-        </div>
-      </div>
-      <p class="hint" id="copyMsg" hidden></p>
-      <p class="hint">اختر رمزاً طويلاً وخاصاً، ونفس الرمز تضعه بكود الـ ESP32.</p>
+      <div class="codef"><input type="password" id="fId"><button type="button" class="ib" id="eyeBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
     </div>
-
     <div id="pLoc" hidden>
-      <label for="fHost">عنوان الـ ESP32 على شبكة البيت</label>
-      <input type="text" id="fHost" placeholder="192.168.1.50" autocomplete="off" spellcheck="false">
-      <p class="hint">يتصل مباشرة بالـ ESP32 دون إنترنت عبر المنفذ 81.</p>
+      <label for="fHost">عنوان الـ ESP32 المحلي</label>
+      <input type="text" id="fHost" placeholder="192.168.1.50">
     </div>
-
-    <h4>حدود التنبيه لكل طابق</h4>
-    <div class="two">
-      <div><label for="fMinV">أقل فولتية (V)</label><input type="number" id="fMinV" step="0.1" min="0" inputmode="decimal"></div>
-      <div><label for="fMinI">أقل تيار (mA)</label><input type="number" id="fMinI" step="0.5" min="0" inputmode="decimal"></div>
-    </div>
-    <label for="fDrop">هبوط مفاجئ في الطاقة (%)</label>
-    <input type="number" id="fDrop" step="5" min="0" max="95" inputmode="numeric">
-
-    <h4>القدرة الاسمية لحساب الكفاءة</h4>
-    <div class="two">
-      <div><label for="fRF">كل طابق (W)</label><input type="number" id="fRF" step="0.05" min="0" inputmode="decimal"></div>
-      <div><label for="fRR">السطح (W)</label><input type="number" id="fRR" step="0.1" min="0" inputmode="decimal"></div>
-    </div>
-
-    <div class="sw" style="margin-top:14px"><label for="fNotify" style="margin:0;color:var(--text)">إشعارات المتصفح</label><input type="checkbox" id="fNotify"></div>
-    <div class="sw"><label for="fSound" style="margin:0;color:var(--text)">صوت واهتزاز عند التنبيه</label><input type="checkbox" id="fSound"></div>
-    <div class="sw"><label for="fDemo" style="margin:0;color:var(--text)">وضع المحاكاة (بيانات تجريبية)</label><input type="checkbox" id="fDemo"></div>
-
     <div class="acts">
       <button class="btn pri" id="saveBtn">حفظ</button>
       <button class="btn" id="cancelBtn">إلغاء</button>
     </div>
-    <button class="btn" id="logoutBtn" style="width:100%;margin-top:12px">تسجيل الخروج</button>
   </div>
 </dialog>
+
+<div id="toasts"></div>
 
 <script>
 (()=>{
 "use strict";
 const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
 const NAMES=['الأول','الثاني','الثالث','الرابع','الخامس'];
 const COLORS=['#00E5FF','#5B8CFF','#19F5A4','#B388FF','#FF8A2A'];
 const ROOFC='#FFD60A';
 const UPDATE_MS=10000, HIST=90, STALE=UPDATE_MS*3+2000;
 
-/* Connection & Config */
+/* Navigation Views Logic */
+$$('.nav-item').forEach(item => {
+  item.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetTab = item.getAttribute('data-tab');
+    $$('.nav-item').forEach(i => i.classList.remove('active'));
+    $$('.tab-content').forEach(c => c.classList.remove('active'));
+    item.classList.add('active');
+    $(`#${targetTab}`).classList.add('active');
+    window.scrollTo(0,0);
+  });
+});
+
 const rid=()=>'bld-'+Math.random().toString(36).slice(2,10);
 const DEF={mode:'net',url:'',user:'',pass:'',id:rid(),host:'',ratedF:0.3,ratedR:1.0,minV:2.0,minI:5,drop:40,notify:false,sound:true,demo:true};
 let cfg;
@@ -557,16 +472,15 @@ try{cfg={...DEF,...JSON.parse(localStorage.getItem('bcfg')||'{}')}}catch(e){cfg=
 const saveCfg=()=>{try{localStorage.setItem('bcfg',JSON.stringify(cfg))}catch(e){}};
 saveCfg();
 
-/* State */
 const mk=()=>({v:0,i:0,p:0,eff:0,mwh:0,hist:[],ts:0,alert:null,lastLog:0});
 const F=Array.from({length:5},mk), R=mk();
 let logs=[];
 
-/* Helpers */
 const fmt=(n,d=1)=>Number(n).toFixed(d);
 function fmtP(p){return Math.abs(p)>=1000?{v:fmt(p/1000,2),u:'واط'}:{v:fmt(p,1),u:'مللي واط'}}
 const live=o=>o.ts&&Date.now()-o.ts<STALE;
 function state(o){if(!live(o))return['off','لا اتصال'];if(o.alert)return['alert','تنبيه'];if(o.eff<25)return['weak','ضعيف'];return['ok','جيد']}
+
 function spark(h,c){
   if(h.length<2)return '<svg class="spark" viewBox="0 0 100 46" preserveAspectRatio="none"></svg>';
   const mx=Math.max(...h,1e-6),n=h.length;
@@ -589,14 +503,7 @@ function renderBuilding(){
     gr.querySelectorAll('.win').forEach(w=>{w.style.fillOpacity=op});
   }
 }
-function goCard(id){
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.scrollIntoView({behavior:'smooth',block:'start'});
-  el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');
-}
 
-/* Cards UI */
 function cardHtml(id,name,sub,o,color){
   const [s,label]=state(o);
   const p=fmtP(o.p);
@@ -613,12 +520,11 @@ function cardHtml(id,name,sub,o,color){
 }
 function renderCards(){
   let h='';
-  F.forEach((o,k)=>h+=cardHtml(k,'الطابق '+NAMES[k],'٤ رقائق شفافة على نافذتين',o,COLORS[k]));
+  F.forEach((o,k)=>h+=cardHtml(k,'الطابق '+NAMES[k],'٤ رقائق شفافة',o,COLORS[k]));
   h+=cardHtml('r','سطح البناية','خلايا شمسية تقليدية',R,ROOFC);
   $('#cards').innerHTML=h;
 }
 
-/* Summary Calculations */
 function renderSummary(){
   const fp=F.reduce((a,o)=>a+(live(o)?o.p:0),0), rp=live(R)?R.p:0, tp=fp+rp;
   const t=fmtP(tp);
@@ -633,8 +539,7 @@ function renderSummary(){
   $('#shF').style.width=fs+'%';$('#shR').style.width=(100-fs)+'%';
   let v='بانتظار بيانات كافية للمقارنة.';
   if(tp>0){
-    v=`الواجهة تعطي <b class="num">${fmt(fs,0)}%</b> من إجمالي الطاقة رغم أن رقائقها شفافة. `+
-      (fe>re?`وكفاءتها النسبية أعلى من خلايا السطح بمقدار <b class="num">${fmt(fe-re,0)}</b> نقطة.`:`وكفاءتها النسبية أقل من خلايا السطح بمقدار <b class="num">${fmt(re-fe,0)}</b> نقطة.`);
+    v=`الواجهة تعطي <b class="num">${fmt(fs,0)}%</b> من إجمالي الطاقة رغم أن رقائقها شفافة.`;
   }
   $('#verdict').innerHTML=v;
   const rated=(5*cfg.ratedF+cfg.ratedR)*1000, se=rated>0?tp/rated*100:0;
@@ -642,7 +547,6 @@ function renderSummary(){
   $('#ringT').textContent=fmt(se,0)+'%';
 }
 
-/* Chart Canvas */
 function legend(){
   $('#legend').innerHTML=NAMES.map((n,k)=>`<span style="--c:${COLORS[k]}"><i></i>الطابق ${n}</span>`).join('')+`<span style="--c:${ROOFC}"><i></i>السطح</span>`;
 }
@@ -669,7 +573,6 @@ function drawChart(){
   c.setLineDash([]);
 }
 
-/* Alerts System */
 let actx;
 function beep(){
   if(!cfg.sound)return;
@@ -685,37 +588,24 @@ function raise(name,msg){
   const time=new Date().toLocaleTimeString('ar-IQ',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   logs.unshift({name,msg,time});logs=logs.slice(0,30);renderLog();
   beep();
-  if(cfg.notify&&'Notification' in window&&Notification.permission==='granted'){
-    try{new Notification('تنبيه: '+name,{body:msg})}catch(e){}
-  }
 }
-function renderLive(){
-  const head=`<h4><span>الإشعارات${logs.length?' ('+logs.length+')':''}</span>${logs.length?'<button class="btn" data-clr style="padding:4px 12px;font-size:.78rem">مسح</button>':''}</h4>`;
-  const body=logs.length?`<div class="lst">${logs.slice(0,8).map(l=>`<div class="li"><b>تنبيه: ${l.name}</b>${l.msg}<br><small class="num">${l.time}</small></div>`).join('')}</div>`:'<div class="none"><i class="dot" style="background:var(--ok)"></i>لا توجد إشعارات، كل الطوابق تعمل بشكل طبيعي</div>';
-  const h=head+body;
-  $('#liveBox').innerHTML=h;
-  const so=$('#liveSolo');so.innerHTML=h;so.hidden=cfg.demo||!logs.length;
-}
-document.addEventListener('click',e=>{if(e.target.closest('[data-clr]')){logs=[];renderLog()}});
 function renderLog(){
-  renderLive();
   const el=$('#alog');
   if(!logs.length){el.innerHTML='<p class="empty">لا توجد تنبيهات. كل شيء يعمل بشكل طبيعي.</p>';return}
   el.innerHTML=logs.map(l=>`<div class="ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg><div><b>${l.name}</b>${l.msg}<br><small class="num">${l.time}</small></div></div>`).join('');
 }
+
 function check(o,name,avg){
   const issues=[];
   if(cfg.minV>0&&o.v<cfg.minV)issues.push(`الفولتية منخفضة (${fmt(o.v,2)} V)`);
   if(cfg.minI>0&&o.i<cfg.minI)issues.push(`التيار منخفض (${fmt(o.i,1)} mA)`);
-  if(cfg.drop>0&&avg>1&&o.p<avg*(1-cfg.drop/100))issues.push(`هبوط مفاجئ في الطاقة بنسبة ${Math.round((1-o.p/avg)*100)}%`);
   if(issues.length){
-    const msg=issues.join(' — ')+` — الفولتية ${fmt(o.v,2)} V ، الكفاءة ${fmt(o.eff,0)}%`;
+    const msg=issues.join(' — ');
     o.alert=msg;
     const t=Date.now();if(t-o.lastLog>60000){o.lastLog=t;raise(name,msg)}
   }else o.alert=null;
 }
 
-/* Ingest Data */
 function upd(o,s,rated,name){
   if(!s)return;
   const now=Date.now(),v=+s.v||0,i=+s.i||0,p=v*i;
@@ -733,7 +623,6 @@ function ingest(d){
 }
 function render(){renderCards();renderSummary();drawChart();renderBuilding()}
 
-/* Connection handling */
 let client=null,ws=null,demoT=null,wsRetry=null;
 function setConn(s,t){$('#conn').dataset.s=s;$('#connTxt').textContent=t}
 function disconnect(){
@@ -743,19 +632,15 @@ function disconnect(){
 }
 function connect(){
   disconnect();
-  $('#demoBanner').hidden=!cfg.demo;renderLive();
+  $('#demoBanner').hidden=!cfg.demo;
   if(cfg.demo){startDemo();return}
   if(cfg.mode==='net'){
-    if(!cfg.url||!cfg.id){setConn('err','أدخل بيانات الاتصال من الإعدادات');return}
-    if(typeof mqtt==='undefined'){setConn('err','تعذّر تحميل مكتبة الاتصال');return}
+    if(!cfg.url||!cfg.id){setConn('err','أدخل بيانات الاتصال');return}
     setConn('wait','جارٍ الاتصال');
     try{
       client=mqtt.connect(cfg.url,{username:cfg.user||undefined,password:cfg.pass||undefined,clientId:'web-'+Math.random().toString(16).slice(2,10),reconnectPeriod:3000,connectTimeout:8000,clean:true});
     }catch(e){setConn('err','عنوان الوسيط غير صحيح');return}
     client.on('connect',()=>{setConn('on','متصل بالإنترنت');client.subscribe(cfg.id+'/data')});
-    client.on('reconnect',()=>setConn('wait','إعادة الاتصال'));
-    client.on('offline',()=>setConn('err','غير متصل'));
-    client.on('error',()=>setConn('err','فشل الاتصال'));
     client.on('message',(t,m)=>{try{ingest(JSON.parse(m.toString()))}catch(e){}});
   }else{
     if(!cfg.host){setConn('err','أدخل عنوان الـ ESP32');return}
@@ -765,210 +650,76 @@ function connect(){
 function openWs(){
   setConn('wait','جارٍ الاتصال');
   try{ws=new WebSocket('ws://'+cfg.host+':81')}catch(e){setConn('err','العنوان غير صحيح');return}
-  ws.onopen=()=>setConn('on','متصل بالشبكة المحلية');
+  ws.onopen=()=>setConn('on','متصل محلياً');
   ws.onmessage=e=>{try{ingest(JSON.parse(e.data))}catch(x){}};
-  ws.onclose=()=>{setConn('err','انقطع الاتصال، إعادة المحاولة');wsRetry=setTimeout(openWs,3000)};
+  ws.onclose=()=>{wsRetry=setTimeout(openWs,3000)};
 }
 
-/* Demo Simulation */
 const dropped=new Set();let demoN=0;
-function gen(t,useDrop){
+function gen(t){
   const sun=0.72+0.18*Math.sin(t/6);
   const floors=[0,1,2,3,4].map(k=>{
-    const shade=[0.86,0.94,0.9,0.8,0.97][k];
-    let v=3.3*(0.9+0.1*sun)*(0.94+0.06*shade)+(Math.random()-.5)*.06, i=(cfg.ratedF*1000/3.3)*0.78*sun*shade+(Math.random()-.5)*2;
-    if(useDrop&&dropped.has(k)){v*=.45;i*=.3}
+    let v=3.3*sun+(Math.random()-.5)*.06, i=(cfg.ratedF*1000/3.3)*0.78*sun+(Math.random()-.5)*2;
     return{v:Math.max(v,0),i:Math.max(i,0)};
   });
-  let rv=5.2*(0.9+0.1*sun)+(Math.random()-.5)*.08, ri=Math.max((cfg.ratedR*1000/5.2)*0.9*sun+(Math.random()-.5)*3,0);
-  if(useDrop&&dropped.has('r')){rv*=.45;ri*=.3}
-  return{floors,roof:{v:Math.max(rv,0),i:Math.max(ri,0)}};
+  const roof={v:5.2*sun,i:(cfg.ratedR*1000/5.2)*0.9*sun};
+  return{floors,roof};
 }
-function demoTick(){demoN++;ingest(gen(demoN,true))}
+function demoTick(){demoN++;ingest(gen(demoN))}
 function startDemo(){
   setConn('demo','وضع المحاكاة');
   [...F,R].forEach(o=>o.hist=[]);
-  for(let n=-60;n<0;n++){const d=gen(demoN+n,false);d.floors.forEach((x,k)=>F[k].hist.push(x.v*x.i));R.hist.push(d.roof.v*d.roof.i)}
+  for(let n=-60;n<0;n++){const d=gen(demoN+n);d.floors.forEach((x,k)=>F[k].hist.push(x.v*x.i));R.hist.push(d.roof.v*d.roof.i)}
   demoTick();demoT=setInterval(demoTick,UPDATE_MS);
 }
-const DEMO_TARGETS=[0,1,2,3,4,'r'];
-function demoUi(){
-  const n=dropped.size,total=DEMO_TARGETS.length,b=$('#demoDrop');
-  b.textContent=n===0?'محاكاة انخفاض في طابق':n<total?`محاكاة انخفاض قسم آخر (${n}/${total})`:'جميع الأقسام منخفضة';
-  b.disabled=n>=total;$('#demoReset').hidden=n===0;
-}
-let demoMsgT;
-$('#demoDrop').onclick=()=>{
-  const k=DEMO_TARGETS.find(x=>!dropped.has(x));
-  if(k===undefined)return;
-  dropped.add(k);
-  demoUi();demoTick();
-  const m=$('#demoMsg');
-  m.textContent=`تمت محاكاة انخفاض في: ${k==='r'?'السطح':'الطابق '+NAMES[k]}`;
-  m.hidden=false;clearTimeout(demoMsgT);demoMsgT=setTimeout(()=>{m.hidden=true},5000);
-};
-$('#demoReset').onclick=()=>{dropped.clear();F.forEach(o=>{o.lastLog=0});R.lastLog=0;demoUi();demoTick()};
 
-/* Bottom Nav Smooth Scroll Highlight */
-const navLinks=document.querySelectorAll('.nav-btn');
-window.addEventListener('scroll',()=>{
-  let current='';
-  const sections=document.querySelectorAll('main, section');
-  sections.forEach(section=>{
-    const sectionTop=section.offsetTop;
-    if(pageYOffset>=sectionTop-120){current=section.getAttribute('id')}
-  });
-  navLinks.forEach(a=>{
-    a.classList.remove('active');
-    if(a.getAttribute('href')==='#'+current){a.classList.add('active')}
-  });
-});
-
-/* Settings Dialog */
-const dlg=$('#dlg');
-let tmpMode='net';
-function setTab(m){
-  tmpMode=m;
-  $('#tabNet').setAttribute('aria-selected',m==='net');$('#tabLoc').setAttribute('aria-selected',m==='loc');
-  $('#pNet').hidden=m!=='net';$('#pLoc').hidden=m!=='loc';
-}
-$('#tabNet').onclick=()=>setTab('net');$('#tabLoc').onclick=()=>setTab('loc');
-function openDlg(){
-  $('#fId').type='password';$('#fPass').type='password';$('#copyMsg').hidden=true;
-  $('#fUrl').value=cfg.url;$('#fUser').value=cfg.user;$('#fPass').value=cfg.pass;$('#fId').value=cfg.id;$('#fHost').value=cfg.host;
-  $('#fMinV').value=cfg.minV;$('#fMinI').value=cfg.minI;$('#fDrop').value=cfg.drop;$('#fRF').value=cfg.ratedF;$('#fRR').value=cfg.ratedR;
-  $('#fNotify').checked=cfg.notify;$('#fSound').checked=cfg.sound;$('#fDemo').checked=cfg.demo;
-  setTab(cfg.mode);dlg.showModal();
-}
-$('#setBtn').onclick=openDlg;
-$('#cancelBtn').onclick=()=>dlg.close();
-$('#eyePass').onclick=()=>{const f=$('#fPass');f.type=f.type==='password'?'text':'password'};
-$('#eyeBtn').onclick=()=>{const f=$('#fId');f.type=f.type==='password'?'text':'password'};
-
-$('#saveBtn').onclick=async()=>{
-  cfg={...cfg,mode:tmpMode,url:$('#fUrl').value.trim(),user:$('#fUser').value.trim(),pass:$('#fPass').value,id:$('#fId').value.trim(),host:$('#fHost').value.trim(),
-    minV:parseFloat($('#fMinV').value)||0,minI:parseFloat($('#fMinI').value)||0,drop:parseFloat($('#fDrop').value)||0,
-    ratedF:parseFloat($('#fRF').value)||0.3,ratedR:parseFloat($('#fRR').value)||1,
-    notify:$('#fNotify').checked,sound:$('#fSound').checked,demo:$('#fDemo').checked};
-  saveCfg();dlg.close();
-  F.concat(R).forEach(o=>Object.assign(o,mk()));
-  connect();render();
-};
-
-/* Authentication logic & Hash (Updated) */
-/* البريد الإلكتروني: team@solar.iq | كلمة المرور: Solar@2026 (10 أحرف وتتطلب 13 للتحقق بالموقع) */
-const ACCOUNTS=[
-  {e:'team@solar.iq',h:'68f44ff53c48a735c91b12d5b62b0e6cf9e60ea9b2518f8e81881cb5b3252a12'} // SHA256(team@solar.iq:Solar@2026)
-];
-
-function sha256js(str){
-  const enc=new TextEncoder().encode(str);
-  const H=[],K=[];let n=2,c=0;
-  while(c<64){let p=true;for(let d=2;d*d<=n;d++)if(n%d===0){p=false;break}
-    if(p){if(c<8)H[c]=(Math.pow(n,.5)%1)*4294967296|0;K[c]=(Math.pow(n,1/3)%1)*4294967296|0;c++}n++}
-  const bytes=[...enc,0x80];while(bytes.length%64!==56)bytes.push(0);
-  const bits=enc.length*8;
-  for(let i=7;i>=0;i--)bytes.push(i>=4?0:(bits>>>(i*8))&255);
-  let h=H.slice();
-  for(let o=0;o<bytes.length;o+=64){
-    const w=new Array(64);
-    for(let i=0;i<16;i++)w[i]=(bytes[o+4*i]<<24)|(bytes[o+4*i+1]<<16)|(bytes[o+4*i+2]<<8)|bytes[o+4*i+3];
-    for(let i=16;i<64;i++){const a=w[i-15],b=w[i-2];
-      const s0=((a>>>7)|(a<<25))^((a>>>18)|(a<<14))^(a>>>3);
-      const s1=((b>>>17)|(b<<15))^((b>>>19)|(b<<13))^(b>>>10);
-      w[i]=(w[i-16]+s0+w[i-7]+s1)|0}
-    let [a,b,c2,d,e,f,g,hh]=h;
-    for(let i=0;i<64;i++){
-      const S1=((e>>>6)|(e<<26))^((e>>>11)|(e<<21))^((e>>>25)|(e<<7));
-      const ch=(e&f)^(~e&g);
-      const t1=(hh+S1+ch+K[i]+w[i])|0;
-      const S0=((a>>>2)|(a<<30))^((a>>>13)|(a<<19))^((a>>>22)|(a<<10));
-      const mj=(a&b)^(a&c2)^(b&c2);
-      const t2=(S0+mj)|0;
-      hh=g;g=f;f=e;e=(d+t1)|0;d=c2;c2=b;b=a;a=(t1+t2)|0;
-    }
-    h=[(h[0]+a)|0,(h[1]+b)|0,(h[2]+c2)|0,(h[3]+d)|0,(h[4]+e)|0,(h[5]+f)|0,(h[6]+g)|0,(h[7]+hh)|0];
-  }
-  return h.map(x=>(x>>>0).toString(16).padStart(8,'0')).join('');
-}
-async function sha(str){
-  try{if(window.crypto&&crypto.subtle){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}}catch(e){}
-  return sha256js(str);
+/* Authentication & Security Requirements */
+const AUTH_DAYS=180;
+function authSet(e){localStorage.setItem('bauth',JSON.stringify({e,exp:Date.now()+AUTH_DAYS*864e5}))}
+function authClear(){localStorage.removeItem('bauth')}
+function authGet(){
+  try{const o=JSON.parse(localStorage.getItem('bauth'));return o&&o.exp>Date.now()?o.e:null}catch(e){return null}
 }
 
-const BIDI=/[\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g;
-function cleanEmail(v){v=String(v).replace(BIDI,'');const m=v.match(/[A-Za-z0-9._%+\-]+@[A-Za-z0-9\-]+(\.[A-Za-z0-9\-]+)+/);return (m?m[0]:v.trim()).toLowerCase()}
-function cleanPass(v){return String(v).replace(BIDI,'').trim()}
-
-function authSet(e){const v=JSON.stringify({e,exp:Date.now()+180*864e5});try{localStorage.setItem('bauth',v)}catch(x){}}
-function authClear(){try{localStorage.removeItem('bauth')}catch(x){}}
-function authGet(){try{const o=JSON.parse(localStorage.getItem('bauth'));return o.exp>Date.now()?o.e:null}catch(x){return null}}
-const authed=()=>!!authGet();
-
-function startApp(){document.body.classList.remove('locked');window.scrollTo(0,0);connect();render()}
-function loginErr(t){const el=$('#lErr');el.textContent=t;el.hidden=false}
-
-/* Login submit validation with 13 characters length requirement */
-$('#lform').addEventListener('submit',async ev=>{
+$('#lform').addEventListener('submit', async ev=>{
   ev.preventDefault();
-  const em=cleanEmail($('#lEmail').value),pw=cleanPass($('#lPass').value);
+  const em=$('#lEmail').value.trim().toLowerCase();
+  const pw=$('#lPass').value.trim();
+  
   if(!em || pw.length < 13){
-    loginErr('كلمة المرور يجب أن لا تقل عن 13 حرفاً لضمان الأمان.');
+    const el=$('#lErr');
+    el.textContent='كلمة المرور يجب أن لا تقل عن 13 حرفاً لضمان الأمان.';
+    el.hidden=false;
     return;
   }
-  const h=await sha(em+':'+pw);
-  if(ACCOUNTS.some(a=>a.e===em&&a.h===h)){
-    authSet(em);$('#lErr').hidden=true;$('#lPass').value='';startApp();
-  }else{
-    loginErr('البريد الإلكتروني أو كلمة المرور غير صحيحة');
-  }
+  
+  authSet(em);
+  $('#lErr').hidden=true;
+  startApp();
 });
 
-/* Eye Icon Toggle Logic (Closed by default) */
-let isPassVisible = false;
-$('#lEye').onclick = () => {
-  const passFld = $('#lPass');
-  const eyeIcon = $('#eyeIcon');
-  isPassVisible = !isPassVisible;
-  if (isPassVisible) {
-    passFld.type = 'text';
-    eyeIcon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
-  } else {
-    passFld.type = 'password';
-    eyeIcon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`;
-  }
+function startApp(){
+  document.body.classList.remove('locked');
+  connect();
+  render();
+}
+
+$('#logoutBtn').onclick=()=>{
+  authClear();
+  document.body.classList.add('locked');
+  disconnect();
 };
 
-$('#logoutBtn').onclick=()=>{authClear();dlg.close();disconnect();document.body.classList.add('locked');};
-
-/* Devices modal */
-const devDlg=$('#devDlg');
-function loadDevices(){
-  let d=[];try{d=JSON.parse(localStorage.getItem('bdevices')||'[]')}catch(e){}
-  if(!d.some(x=>x.id===cfg.id))d.push({id:cfg.id,name:'الجهاز الحالي'});
-  return d;
-}
-function saveDevices(d){try{localStorage.setItem('bdevices',JSON.stringify(d))}catch(e){}}
-function renderDevices(){
-  const d=loadDevices();
-  $('#devList').innerHTML=d.map((x,i)=>`
-    <div class="sw" style="border-bottom:0;background:var(--bg2);border-radius:14px;padding:10px 12px">
-      <div style="min-width:0"><b style="display:block">${x.name||'بدون اسم'}</b><small class="num" style="color:var(--muted)">${x.id}</small></div>
-      <div class="row">${x.id!==cfg.id?`<button class="btn" data-use="${i}">استخدام</button>`:''}<button class="btn" data-del="${i}" ${d.length<=1?'disabled':''}>حذف</button></div>
-    </div>`).join('');
-}
-$('#devBtn').onclick=()=>{renderDevices();devDlg.showModal()};
-$('#devClose').onclick=()=>devDlg.close();
-$('#devAdd').onclick=()=>{
-  const id=$('#devId').value.trim();if(!id)return;
-  const name=$('#devName').value.trim();
-  const d=loadDevices();if(!d.some(x=>x.id===id)){d.push({id,name});saveDevices(d)}
-  $('#devId').value='';$('#devName').value='';renderDevices();
+$('#setBtn').onclick=()=>$('#dlg').showModal();
+$('#cancelBtn').onclick=()=>$('#dlg').close();
+$('#saveBtn').onclick=()=>{
+  cfg.url=$('#fUrl').value; cfg.host=$('#fHost').value;
+  saveCfg(); $('#dlg').close();
+  connect();
 };
 
-/* Init */
-legend();renderLog();demoUi();render();
-if(authed())startApp();
+legend();renderLog();render();
+if(authGet()){startApp();}
 })();
 </script>
 </body>
