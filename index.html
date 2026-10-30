@@ -18,17 +18,20 @@
   --grad:linear-gradient(135deg,#19E6FF 0%,#2F8CFF 100%);
   --solar:linear-gradient(135deg,#FFE94D 0%,#FFA51F 100%);
   --r:22px;
-  --f0:#A78BFA; --f1:#38BDF8; --f2:#34D399; --f3:#F472B6; --f4:#FB923C;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{font-family:"IBM Plex Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh;
   background-image:radial-gradient(800px 480px at 90% -8%,rgba(0,200,255,.20),transparent 60%),radial-gradient(640px 460px at -5% 40%,rgba(255,176,32,.10),transparent 60%),linear-gradient(rgba(60,190,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(60,190,255,.045) 1px,transparent 1px);
-  background-size:auto,auto,38px 38px,38px 38px;background-attachment:fixed;padding-bottom:env(safe-area-inset-bottom)}
+  background-size:auto,auto,38px 38px,38px 38px;background-attachment:fixed;padding-bottom:calc(80px + env(safe-area-inset-bottom))}
 .num{font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate;display:inline-block}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 :focus-visible{outline:2px solid var(--sky);outline-offset:3px;border-radius:10px}
 .wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+
+/* Views Management */
+.view-section{display:none}
+.view-section.active-view{display:block}
 
 /* top bar */
 .top{position:sticky;top:0;z-index:20;backdrop-filter:blur(16px);background:rgba(4,9,18,.8);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
@@ -52,11 +55,16 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 .ib:hover{background:var(--surface2)}
 .ib svg{width:20px;height:20px}
 
+/* Bottom Navigation Bar */
+.bottom-nav{position:fixed;bottom:0;inset-inline:0;z-index:40;background:rgba(7,18,35,.92);backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:8px 12px calc(8px + env(safe-area-inset-bottom));display:flex;justify-content:space-around;align-items:center;overflow-x:auto}
+.bnav-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 10px;border-radius:12px;color:var(--muted);font-size:.75rem;font-weight:500;transition:.2s;white-space:nowrap}
+.bnav-btn svg{width:20px;height:20px}
+.bnav-btn:hover{color:var(--text);background:var(--surface)}
+.bnav-btn.active{color:var(--sky);background:var(--surface2);font-weight:600}
+
 /* hero */
 .hero{display:grid;gap:22px;padding:28px 0 8px;grid-template-columns:1fr}
 .lbl{color:var(--muted);font-size:1.05rem;font-weight:500}
-.hero-copy h1{font-size:clamp(1.8rem,5.4vw,3rem);line-height:1.25;font-weight:700;letter-spacing:-.01em}
-.hero-copy p{color:var(--muted);margin-top:12px;max-width:52ch;font-size:1rem}
 .total{margin-top:22px;display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
 .total .big{font-size:clamp(3.2rem,12vw,5.6rem);font-weight:700;line-height:1;background:var(--solar);-webkit-background-clip:text;background-clip:text;color:transparent}
 .ring{position:relative;width:96px;height:96px;margin-inline-start:auto;flex:none}
@@ -150,14 +158,7 @@ footer{margin-top:40px;padding:26px 0 40px;border-top:1px solid var(--line);colo
 .codef input{flex:1;min-width:0}
 .codef .cb{display:flex;gap:6px;flex:none}
 .codef .ib{width:50px;height:50px;border-radius:14px;flex:none}
-/* design image */
-.figure{display:block;width:100%;padding:0;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--surface);cursor:zoom-in}
-.figure img{display:block;width:100%;height:auto}
-#imgDlg{width:min(96vw,1200px);border-radius:20px}
-#imgDlg .zoomwrap{overflow:auto;max-height:90vh;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y pinch-zoom}
-#imgDlg img{display:block;width:100%;height:auto;max-height:calc(90vh - 72px);object-fit:contain}
-#imgDlg.zoomed img{width:1000px;max-width:none;max-height:none}
-#imgDlg .close{position:sticky;top:0;display:flex;justify-content:flex-start;gap:8px;padding:10px;z-index:2;background:#0A1830}
+
 /* team */
 .sup{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(255,214,10,.14),rgba(255,138,42,.08));border:1px solid rgba(255,200,40,.4);border-radius:22px;padding:16px 18px;margin-bottom:14px}
 .sup small{display:block;color:var(--muted);font-size:.78rem}
@@ -172,7 +173,7 @@ footer{margin-top:40px;padding:26px 0 40px;border-top:1px solid var(--line);colo
 /* login */
 .login{display:none;min-height:100vh;place-items:center;padding:20px}
 .locked .login{display:grid}
-.locked>header,.locked>main{display:none}
+.locked>header,.locked>main,.locked>.bottom-nav{display:none}
 .lcard{width:min(100%,420px);background:linear-gradient(180deg,rgba(16,36,71,.85),rgba(8,20,40,.9));border:1px solid var(--line);border-radius:28px;padding:34px 24px 26px;text-align:center;box-shadow:0 30px 80px -30px rgba(0,190,255,.35)}
 .lcard .logo{width:68px;height:68px;border-radius:22px;margin:0 auto 14px}
 .lcard h1{font-size:1.7rem;font-weight:700}
@@ -214,7 +215,7 @@ input[type=text],input[type=password],input[type=number]{width:100%;background:#
 input:focus{outline:2px solid var(--sky);border-color:transparent}
 .hint{color:var(--muted);font-size:.78rem;margin-top:6px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.sw{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px side var(--line);font-size:.92rem}
 .sw input{appearance:none;width:46px;height:26px;border-radius:99px;background:#1E3A5F;position:relative;cursor:pointer;flex:none;transition:.2s}
 .sw input::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
 .sw input:checked{background:var(--ok)}
@@ -231,14 +232,8 @@ input:focus{outline:2px solid var(--sky);border-color:transparent}
   .hero{padding-top:44px}
   .grid{grid-template-columns:repeat(3,1fr)}
 }
-@media(max-width:420px){.brand span{font-size:.92rem}.pill{padding:6px 10px}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-
-/* إخفاء أيقونة إظهار/إخفاء كلمة المرور الأصلية من المتصفح (Edge/IE) */
 input[type="password"]::-ms-reveal,
-input[type="password"]::-ms-clear{
-  display:none;
-}
+input[type="password"]::-ms-clear{display:none}
 </style>
 </head>
 <body class="locked">
@@ -284,147 +279,220 @@ input[type="password"]::-ms-clear{
     <h1>مبنى الطاقة بالرقائق الشفافة</h1>
     <p class="sub">لوحة مراقبة الطاقة</p>
     <div class="fld"><input type="text" id="lEmail" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="البريد الإلكتروني" aria-label="البريد الإلكتروني"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
-    <div class="fld"><input type="password" id="lPass" autocomplete="current-password" placeholder="كلمة المرور (6 أحرف على الأقل)" aria-label="كلمة المرور"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><button type="button" class="ib" id="lEye" aria-label="إظهار أو إخفاء كلمة المرور"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <div class="fld"><input type="password" id="lPass" autocomplete="current-password" placeholder="كلمة المرور (10 رموز على الأقل)" aria-label="كلمة المرور"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><button type="button" class="ib" id="lEye" aria-label="إظهار أو إخفاء كلمة المرور"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
     <p class="lerr" id="lErr" hidden></p>
     <button class="btn pri" type="submit">تسجيل الدخول</button>
     <p class="lnote">الدخول مخصص لفريق المشروع فقط</p>
   </form>
 </div>
 
+<!-- Bottom Navigation Bar -->
+<nav class="bottom-nav">
+  <button class="bnav-btn active" data-target="view-home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    الرئيسية
+  </button>
+  <button class="bnav-btn" data-target="view-intro">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 4-9 4-9-4 9-4z"/><path d="M3 10v6l9 4 9-4v-6"/></svg>
+    المقدمة
+  </button>
+  <button class="bnav-btn" data-target="view-explain">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    الشرح
+  </button>
+  <button class="bnav-btn" data-target="view-benefits">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>
+    الفوائد
+  </button>
+  <button class="bnav-btn" data-target="view-conclusion">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    الخاتمة
+  </button>
+  <button class="bnav-btn" data-target="view-team">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    الفريق
+  </button>
+</nav>
+
 <main class="wrap">
-  <div class="statusrow"><div class="pill" id="conn" data-s="wait"><i class="dot"></i><span id="connTxt">جارٍ الاتصال</span></div><span class="upd" id="upd"></span></div>
-  <div class="banner" id="demoBanner" hidden>
-    <span>أنت تشاهد بيانات تجريبية مُحاكاة. للربط بالمجسم الحقيقي افتح الإعدادات وأدخل بيانات الاتصال.</span>
-    <div class="row"><button class="btn" id="demoDrop">محاكاة انخفاض في طابق</button><button class="btn" id="demoReset" hidden>إعادة الوضع الطبيعي</button></div>
-    <p class="hint" id="demoMsg" hidden style="flex-basis:100%;color:var(--sky);font-weight:600"></p>
-    <div class="livebox" id="liveBox"></div>
-  </div>
-  <div class="livebox solo" id="liveSolo" hidden></div>
 
-  <div class="hero">
-    <div class="hero-copy">
-      <p class="lbl">الطاقة المنتجة الآن</p>
-      <div class="total"><span class="big num" id="totP">0.0</span><span class="unit" id="totU">مللي واط</span>
-        <div class="ring" title="كفاءة النظام كله"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="rg" x1="0" x2="1"><stop stop-color="#19E6FF"/><stop offset="1" stop-color="#2F8CFF"/></linearGradient></defs><circle class="rb" cx="50" cy="50" r="42"/><circle id="ringF" class="rf" cx="50" cy="50" r="42" pathLength="100" stroke-dasharray="0 100"/></svg><b class="num" id="ringT">0%</b><small>كفاءة النظام</small></div></div>
-      <div class="kpis">
-        <div class="kpi"><small>طاقة الواجهة</small><b class="num" id="kFacade">0</b><i>مللي واط</i></div>
-        <div class="kpi"><small>طاقة السطح</small><b class="num" id="kRoof">0</b><i>مللي واط</i></div>
-        <div class="kpi"><small>الطاقة المتراكمة</small><b class="num" id="kWh">0</b><i>مللي واط ساعة</i></div>
+  <!-- 1. الرئيسية -->
+  <div id="view-home" class="view-section active-view">
+    <div class="statusrow"><div class="pill" id="conn" data-s="wait"><i class="dot"></i><span id="connTxt">جارٍ الاتصال</span></div><span class="upd" id="upd"></span></div>
+    <div class="banner" id="demoBanner" hidden>
+      <span>أنت تشاهد بيانات تجريبية مُحاكاة. للربط بالمجسم الحقيقي افتح الإعدادات وأدخل بيانات الاتصال.</span>
+      <div class="row"><button class="btn" id="demoDrop">محاكاة انخفاض في طابق</button><button class="btn" id="demoReset" hidden>إعادة الوضع الطبيعي</button></div>
+      <p class="hint" id="demoMsg" hidden style="flex-basis:100%;color:var(--sky);font-weight:600"></p>
+      <div class="livebox" id="liveBox"></div>
+    </div>
+    <div class="livebox solo" id="liveSolo" hidden></div>
+
+    <div class="hero">
+      <div class="hero-copy">
+        <p class="lbl">الطاقة المنتجة الآن</p>
+        <div class="total"><span class="big num" id="totP">0.0</span><span class="unit" id="totU">مللي واط</span>
+          <div class="ring" title="كفاءة النظام كله"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="rg" x1="0" x2="1"><stop stop-color="#19E6FF"/><stop offset="1" stop-color="#2F8CFF"/></linearGradient></defs><circle class="rb" cx="50" cy="50" r="42"/><circle id="ringF" class="rf" cx="50" cy="50" r="42" pathLength="100" stroke-dasharray="0 100"/></svg><b class="num" id="ringT">0%</b><small>كفاءة النظام</small></div></div>
+        <div class="kpis">
+          <div class="kpi"><small>طاقة الواجهة</small><b class="num" id="kFacade">0</b><i>مللي واط</i></div>
+          <div class="kpi"><small>طاقة السطح</small><b class="num" id="kRoof">0</b><i>مللي واط</i></div>
+          <div class="kpi"><small>الطاقة المتراكمة</small><b class="num" id="kWh">0</b><i>مللي واط ساعة</i></div>
+        </div>
       </div>
     </div>
+
+    <section id="bldgSec">
+      <div class="sh"><h2>مخطط المبنى</h2><p>اضغط على أي طابق أو السطح للانتقال إلى بياناته</p></div>
+      <div class="bldg">
+        <svg viewBox="0 0 240 372" role="img" aria-label="مخطط تفاعلي لمبنى الطاقة">
+          <g class="flr" id="flr-r" data-target="card-r" role="button" tabindex="0" aria-label="السطح: الخلايا الشمسية، اضغط للانتقال">
+            <rect class="body" x="20" y="6" width="200" height="46" rx="10" fill="#0F2038" stroke="rgba(255,214,10,.35)" stroke-width="1.5"/>
+            <rect class="win" x="35" y="16" width="50" height="20" rx="3" fill="#FFD60A" style="fill-opacity:.6"/>
+            <rect class="win" x="95" y="16" width="50" height="20" rx="3" fill="#FFD60A" style="fill-opacity:.6"/>
+            <rect class="win" x="155" y="16" width="50" height="20" rx="3" fill="#FFD60A" style="fill-opacity:.6"/>
+            <text class="flabel" x="120" y="46" text-anchor="middle">السطح</text>
+          </g>
+
+          <g class="flr" id="flr-4" data-target="card-4" role="button" tabindex="0" aria-label="الطابق الخامس، اضغط للانتقال">
+            <rect class="body" x="20" y="58" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/>
+            <rect class="win" x="35" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/>
+            <rect class="win" x="75" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/>
+            <rect class="win" x="127" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/>
+            <rect class="win" x="167" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/>
+            <text class="flabel" x="120" y="106" text-anchor="middle">5</text>
+          </g>
+
+          <g class="flr" id="flr-3" data-target="card-3" role="button" tabindex="0" aria-label="الطابق الرابع، اضغط للانتقال">
+            <rect class="body" x="20" y="118" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/>
+            <rect class="win" x="35" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/>
+            <rect class="win" x="75" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/>
+            <rect class="win" x="127" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/>
+            <rect class="win" x="167" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/>
+            <text class="flabel" x="120" y="166" text-anchor="middle">4</text>
+          </g>
+
+          <g class="flr" id="flr-2" data-target="card-2" role="button" tabindex="0" aria-label="الطابق الثالث، اضغط للانتقال">
+            <rect class="body" x="20" y="178" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/>
+            <rect class="win" x="35" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/>
+            <rect class="win" x="75" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/>
+            <rect class="win" x="127" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/>
+            <rect class="win" x="167" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/>
+            <text class="flabel" x="120" y="226" text-anchor="middle">3</text>
+          </g>
+
+          <g class="flr" id="flr-1" data-target="card-1" role="button" tabindex="0" aria-label="الطابق الثاني، اضغط للانتقال">
+            <rect class="body" x="20" y="238" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/>
+            <rect class="win" x="35" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/>
+            <rect class="win" x="75" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/>
+            <rect class="win" x="127" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/>
+            <rect class="win" x="167" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/>
+            <text class="flabel" x="120" y="286" text-anchor="middle">2</text>
+          </g>
+
+          <g class="flr" id="flr-0" data-target="card-0" role="button" tabindex="0" aria-label="الطابق الأول، اضغط للانتقال">
+            <rect class="body" x="20" y="298" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/>
+            <rect class="win" x="35" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/>
+            <rect class="win" x="75" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/>
+            <rect class="win" x="127" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/>
+            <rect class="win" x="167" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/>
+            <text class="flabel" x="120" y="346" text-anchor="middle">1</text>
+          </g>
+
+          <rect x="10" y="358" width="220" height="8" rx="3" fill="#08132A"/>
+        </svg>
+        <p class="cap">٥ طوابق × رقيقتان لكل نافذة × نافذتان للطابق = ٤ رقائق لكل طابق، أي ٢٠ رقيقة على كامل الواجهة</p>
+      </div>
+    </section>
+
+    <section id="floors">
+      <div class="sh"><h2>الطوابق</h2><p>الفولتية والتيار والطاقة والكفاءة لكل طابق</p></div>
+      <div class="grid" id="cards"></div>
+    </section>
+
+    <section>
+      <div class="sh"><h2>الطاقة خلال الدقائق الأخيرة</h2><p>مللي واط</p></div>
+      <div class="panel">
+        <div class="legend" id="legend"></div>
+        <canvas id="chart" aria-label="مخطط خطي لطاقة كل طابق"></canvas>
+      </div>
+    </section>
+
+    <section>
+      <div class="sh"><h2>مقارنة: رقائق الزجاج مقابل خلايا السطح</h2><p>أيّهما أفضل في هذا المجسم؟</p></div>
+      <div class="panel">
+        <div class="cmp">
+          <div class="side"><h3>رقائق الواجهة الشفافة</h3><p>مجموع الطوابق الخمسة</p><div class="v num" id="cmpF">0</div><div class="bl"><span>متوسط الكفاءة</span><b class="num" id="cmpFe">0%</b></div></div>
+          <div class="side"><h3>الخلايا الشمسية على السطح</h3><p>خلايا مونو تقليدية</p><div class="v num" id="cmpR">0</div><div class="bl"><span>الكفاءة</span><b class="num" id="cmpRe">0%</b></div></div>
+        </div>
+        <div class="share" aria-hidden="true"><i id="shF" style="background:var(--violet);width:50%"></i><i id="shR" style="background:var(--sun);width:50%"></i></div>
+        <div class="bl"><span>حصة الواجهة من الإجمالي</span><span>حصة السطح</span></div>
+        <p class="verdict" id="verdict"></p>
+      </div>
+    </section>
+
+    <section>
+      <div class="sh"><h2>سجل التنبيهات</h2><button class="btn" id="clearLog">مسح السجل</button></div>
+      <div class="panel"><div class="alist" id="alog"><p class="empty">لا توجد تنبيهات. كل شيء يعمل بشكل طبيعي.</p></div></div>
+    </section>
   </div>
 
-  <section id="bldgSec">
-    <div class="sh"><h2>مخطط المبنى</h2><p>اضغط على أي طابق أو السطح للانتقال إلى بياناته</p></div>
-    <div class="bldg">
-      <svg viewBox="0 0 240 372" role="img" aria-label="مخطط تفاعلي لمبنى الطاقة">
-        <g class="flr" id="flr-r" data-target="card-r" role="button" tabindex="0" aria-label="السطح: الخلايا الشمسية، اضغط للانتقال">
-          <rect class="body" x="20" y="6" width="200" height="46" rx="10" fill="#0F2038" stroke="rgba(255,214,10,.35)" stroke-width="1.5"/>
-          <rect class="win" x="35" y="16" width="50" height="20" rx="3" fill="#FFD60A" style="fill-opacity:.6"/>
-          <rect class="win" x="95" y="16" width="50" height="20" rx="3" fill="#FFD60A" style="fill-opacity:.6"/>
-          <rect class="win" x="155" y="16" width="50" height="20" rx="3" fill="#FFD60A" style="fill-opacity:.6"/>
-          <text class="flabel" x="120" y="46" text-anchor="middle">السطح</text>
-        </g>
-
-        <g class="flr" id="flr-4" data-target="card-4" role="button" tabindex="0" aria-label="الطابق الخامس، اضغط للانتقال">
-          <rect class="body" x="20" y="58" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/>
-          <rect class="win" x="35" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/>
-          <rect class="win" x="75" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/>
-          <rect class="win" x="127" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/>
-          <rect class="win" x="167" y="70" width="38" height="30" rx="3" fill="#FF8A2A" style="fill-opacity:.6"/>
-          <text class="flabel" x="120" y="106" text-anchor="middle">5</text>
-        </g>
-
-        <g class="flr" id="flr-3" data-target="card-3" role="button" tabindex="0" aria-label="الطابق الرابع، اضغط للانتقال">
-          <rect class="body" x="20" y="118" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/>
-          <rect class="win" x="35" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/>
-          <rect class="win" x="75" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/>
-          <rect class="win" x="127" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/>
-          <rect class="win" x="167" y="130" width="38" height="30" rx="3" fill="#B388FF" style="fill-opacity:.6"/>
-          <text class="flabel" x="120" y="166" text-anchor="middle">4</text>
-        </g>
-
-        <g class="flr" id="flr-2" data-target="card-2" role="button" tabindex="0" aria-label="الطابق الثالث، اضغط للانتقال">
-          <rect class="body" x="20" y="178" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/>
-          <rect class="win" x="35" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/>
-          <rect class="win" x="75" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/>
-          <rect class="win" x="127" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/>
-          <rect class="win" x="167" y="190" width="38" height="30" rx="3" fill="#19F5A4" style="fill-opacity:.6"/>
-          <text class="flabel" x="120" y="226" text-anchor="middle">3</text>
-        </g>
-
-        <g class="flr" id="flr-1" data-target="card-1" role="button" tabindex="0" aria-label="الطابق الثاني، اضغط للانتقال">
-          <rect class="body" x="20" y="238" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/>
-          <rect class="win" x="35" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/>
-          <rect class="win" x="75" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/>
-          <rect class="win" x="127" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/>
-          <rect class="win" x="167" y="250" width="38" height="30" rx="3" fill="#5B8CFF" style="fill-opacity:.6"/>
-          <text class="flabel" x="120" y="286" text-anchor="middle">2</text>
-        </g>
-
-        <g class="flr" id="flr-0" data-target="card-0" role="button" tabindex="0" aria-label="الطابق الأول، اضغط للانتقال">
-          <rect class="body" x="20" y="298" width="200" height="54" rx="8" fill="#0E1E3B" stroke="rgba(60,190,255,.22)" stroke-width="1.5"/>
-          <rect class="win" x="35" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/>
-          <rect class="win" x="75" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/>
-          <rect class="win" x="127" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/>
-          <rect class="win" x="167" y="310" width="38" height="30" rx="3" fill="#00E5FF" style="fill-opacity:.6"/>
-          <text class="flabel" x="120" y="346" text-anchor="middle">1</text>
-        </g>
-
-        <rect x="10" y="358" width="220" height="8" rx="3" fill="#08132A"/>
-      </svg>
-      <p class="cap">٥ طوابق × رقيقتان لكل نافذة × نافذتان للطابق = ٤ رقائق لكل طابق، أي ٢٠ رقيقة على كامل الواجهة</p>
-    </div>
-  </section>
-
-  <section id="floors">
-    <div class="sh"><h2>الطوابق</h2><p>الفولتية والتيار والطاقة والكفاءة لكل طابق</p></div>
-    <div class="grid" id="cards"></div>
-  </section>
-
-  <section>
-    <div class="sh"><h2>الطاقة خلال الدقائق الأخيرة</h2><p>مللي واط</p></div>
-    <div class="panel">
-      <div class="legend" id="legend"></div>
-      <canvas id="chart" aria-label="مخطط خطي لطاقة كل طابق"></canvas>
-    </div>
-  </section>
-
-  <section>
-    <div class="sh"><h2>مقارنة: رقائق الزجاج مقابل خلايا السطح</h2><p>أيّهما أفضل في هذا المجسم؟</p></div>
-    <div class="panel">
-      <div class="cmp">
-        <div class="side"><h3>رقائق الواجهة الشفافة</h3><p>مجموع الطوابق الخمسة</p><div class="v num" id="cmpF">0</div><div class="bl"><span>متوسط الكفاءة</span><b class="num" id="cmpFe">0%</b></div></div>
-        <div class="side"><h3>الخلايا الشمسية على السطح</h3><p>خلايا مونو تقليدية</p><div class="v num" id="cmpR">0</div><div class="bl"><span>الكفاءة</span><b class="num" id="cmpRe">0%</b></div></div>
+  <!-- 2. المقدمة -->
+  <div id="view-intro" class="view-section">
+    <section>
+      <div class="sh"><h2>مقدمة المشروع</h2></div>
+      <div class="panel" style="font-size: 1.05rem; line-height: 2;">
+        <p>في ظل التوجه العالمي نحو العمارة المستدامة وتقنيات المباني صفرية الطاقة، يبرز التحدي الأكبر في كيفية رفع كفاءة توليد الطاقة الذاتية وإدارتها داخل المنشآت الحديثة. تشير البيانات العلمية المعتمدة في قطاع الطاقة إلى أن المباني مسؤولة عن جزء كبير من الاستهلاك العالمي للكهرباء والانبعاثات الكربونية. يتناول هذا المشروع تقديم حل هندسي يتكامل فيه التوليد المباشر للطاقة عبر الخلايا الشمسية مع نظام مراقبة ذكي يعتمد على تقنيات إنترنت الأشياء ومتحكم esp32 للتحكم الدقيق و للحد من الضياعات وتحسين الاداء التشغيلي للمبنى.</p>
       </div>
-      <div class="share" aria-hidden="true"><i id="shF" style="background:var(--violet);width:50%"></i><i id="shR" style="background:var(--sun);width:50%"></i></div>
-      <div class="bl"><span>حصة الواجهة من الإجمالي</span><span>حصة السطح</span></div>
-      <p class="verdict" id="verdict"></p>
-    </div>
-  </section>
+    </section>
+  </div>
 
-  <section>
-    <div class="sh"><h2>سجل التنبيهات</h2><button class="btn" id="clearLog">مسح السجل</button></div>
-    <div class="panel"><div class="alist" id="alog"><p class="empty">لا توجد تنبيهات. كل شيء يعمل بشكل طبيعي.</p></div></div>
-  </section>
+  <!-- 3. الشرح -->
+  <div id="view-explain" class="view-section">
+    <section>
+      <div class="sh"><h2>شرح المشروع</h2></div>
+      <div class="panel" style="font-size: 1.05rem; line-height: 2; display: grid; gap: 16px;">
+        <p>يقدم هذا المشروع دراسة تقييمية وتحليلية مقارنة بين تقنيتين رئيسيتين لتوليد الطاقة الشمسية في المباني:</p>
+        <p><strong>أنظمة الخلايا الشمسية على الأسطح:</strong> اعتمدت الدراسة على تقنيات السليكون الكريستالي التقليدية التي تتميز بتقديم أعلى معدلات كفاءة تحويل للقدرة الكهربائية، إلا أن استطاعتها التوليدية تظل محددة بحدود المساحة السطحية المتاحة للمبنى وتأثرها بالارتفاع الحراري.</p>
+        <p><strong>الرقائق الشمسية الشفافة المدمجة بالزجاج:</strong> تعتمد هذه التقنية الحديثة على نفاذ الضوء المرئي مع امتصاص الطيف غير المرئي من الأشعة الشمسية، مما يسمح باستغلال الواجهات والنوافذ الزجاجية كعناصر مولدة للطاقة دون التأثير على الإضاءة الطبيعية.</p>
+        <p><strong>منظومة التحكم والرصد الذكي:</strong> يتم متابعة قراءات الجهد والتيار والقدرة الكلية للمنظومتين بشكل لحظي عبر متحكم esp32 حيث يتم معالجة البيانات ونقلها عبر بروتوكولات الاتصال الحديثة لتعرض مباشرة على تطبيق الويب التفاعلي للتحكم والمراقبة.</p>
+      </div>
+    </section>
+  </div>
 
-  <section id="team">
-    <div class="sh"><h2>فريق المشروع</h2><p>مشروع تخرج</p></div>
-    <div class="sup"><span class="av" style="--c:#FFD60A">د</span><div><small>الإشراف على المشروع</small><b>د. بيادر عبد الرزاق</b></div></div>
-    <div class="panel"><h3 class="th">الطلبة</h3><ul class="team"><li style="--c:#00E5FF"><span class="av">م</span>مقتدى ثائر زكي</li><li style="--c:#5B8CFF"><span class="av">ع</span>علي أحمد خير الله</li><li style="--c:#19F5A4"><span class="av">ع</span>علي حيدر جاسم محمد</li><li style="--c:#B388FF"><span class="av">م</span>محمد علي عيدان ناصر</li><li style="--c:#FF8A2A"><span class="av">س</span>سيف نبراس مهدي سلمان</li><li style="--c:#00E5FF"><span class="av">ع</span>عباس فوزي عبدالله عباس</li><li style="--c:#5B8CFF"><span class="av">ك</span>كوثر فراس عبد الجبار عبدالنبي</li><li style="--c:#19F5A4"><span class="av">م</span>مريم عبد الرحمن سلطان غدير</li><li style="--c:#B388FF"><span class="av">ر</span>رند وضاء مزهر حسن</li><li style="--c:#FF8A2A"><span class="av">أ</span>أحمد رعد عبد الرزاق عبود</li></ul></div>
-  </section>
+  <!-- 4. الفوائد -->
+  <div id="view-benefits" class="view-section">
+    <section>
+      <div class="sh"><h2>فوائد المشروع</h2></div>
+      <div class="panel" style="font-size: 1.05rem; line-height: 2; display: grid; gap: 16px;">
+        <p><strong>التكامل والاستغلال الأمثل للمساحات:</strong> بالرغم من أن كفاءة التوليد المباشرة للرقائق الشفافة تعتبر أقل من الألواح التقليدية إلا أن استغلال مساحات الواجهات الزجاجية الممتدة في المباني العالية يعوض هذا الفارق ويزيد من إجمالي الطاقة المنتجة.</p>
+        <p><strong>خفض الأحمال الحرارية للتكييف:</strong> تعمل الرقائق الشفافة كحاجز حراري يقلل من دخول الحرارة عبر النوافذ الزجاجية مما يؤدي إلى تقليل استهلاك الطاقة في أنظمة التكييف والتهوية داخل المبنى.</p>
+        <p><strong>الاستدامة والجدوى البيئية:</strong> يسهم الدمج بين التوليد السطحي والتوليد الموزع على الواجهات في تقليل البصمة الكربونية وتوفير مصدر طاقة نظيف ومستدام يخدم بنية المبنى الذكي.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- 5. الخاتمة -->
+  <div id="view-conclusion" class="view-section">
+    <section>
+      <div class="sh"><h2>الخاتمة</h2></div>
+      <div class="panel" style="font-size: 1.05rem; line-height: 2;">
+        <p>أثبتت الدراسة العملية والتحليلية للمشروع أن الجمع بين الألواح الشمسية عالية الكفاءة على الأسطح والرقائق الشفافة على الواجهات يمثل حلاً هندسياً متكاملاً للمباني المستدامة كما أثبتت منظومة المراقبة المعززة بالمتحكم esp32 كفاءة عالية في رصد البيانات حظياً وتوفير تنبيهات فورية مما يوفر منصة متكاملة لمتابعة الأداء وضمان الاستغلال الأمثل للطاقة.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- 6. الفريق -->
+  <div id="view-team" class="view-section">
+    <section id="team">
+      <div class="sh"><h2>فريق المشروع</h2><p>مشروع تخرج</p></div>
+      <div class="sup"><span class="av" style="--c:#FFD60A">د</span><div><small>الإشراف على المشروع</small><b>د. بيادر عبد الرزاق</b></div></div>
+      <div class="panel"><h3 class="th">الطلبة</h3><ul class="team"><li style="--c:#00E5FF"><span class="av">م</span>مقتدى ثائر زكي</li><li style="--c:#5B8CFF"><span class="av">ع</span>علي أحمد خير الله</li><li style="--c:#19F5A4"><span class="av">ع</span>علي حيدر جاسم محمد</li><li style="--c:#B388FF"><span class="av">م</span>محمد علي عيدان ناصر</li><li style="--c:#FF8A2A"><span class="av">س</span>سيف نبراس مهدي سلمان</li><li style="--c:#00E5FF"><span class="av">ع</span>عباس فوزي عبدالله عباس</li><li style="--c:#5B8CFF"><span class="av">ك</span>كوثر فراس عبد الجبار عبدالنبي</li><li style="--c:#19F5A4"><span class="av">م</span>مريم عبد الرحمن سلطان غدير</li><li style="--c:#B388FF"><span class="av">ر</span>رند وضاء مزهر حسن</li><li style="--c:#FF8A2A"><span class="av">أ</span>أحمد رعد عبد الرزاق عبود</li></ul></div>
+    </section>
+  </div>
 
   <footer>مشروع تخرج: توليد الطاقة الكهربائية من زجاج الواجهات بالرقائق الشفافة، مراقبة عبر ESP32</footer>
 </main>
 
 <div id="toasts" aria-live="assertive"></div>
-
-<dialog id="imgDlg" aria-label="صورة التصميم مكبّرة">
-  <div class="zoomwrap">
-    <div class="close"><button type="button" class="btn pri" id="imgClose">إغلاق</button><button type="button" class="btn" id="imgZoom">تكبير للقراءة</button></div>
-    <img id="imgBig" alt="لوحة تصميم مجسم البناية مكبّرة">
-  </div>
-</dialog>
 
 <dialog id="dlg">
   <div class="dg">
@@ -456,7 +524,7 @@ input[type="password"]::-ms-clear{
     <div id="pLoc" hidden>
       <label for="fHost">عنوان الـ ESP32 على شبكة البيت</label>
       <input type="text" id="fHost" placeholder="192.168.1.50" autocomplete="off" spellcheck="false">
-      <p class="hint">يتصل مباشرة بالـ ESP32 دون إنترنت عبر المنفذ 81. ملاحظة: المتصفح يمنع هذا الاتصال إذا فُتح الموقع من رابط https، لذلك استخدم هذا الوضع بفتح الملف مباشرة من الجهاز أو من عنوان http. أما وضع الإنترنت فيعمل من نفس شبكة البيت ومن أي شبكة أخرى.</p>
+      <p class="hint">يتصل مباشرة بالـ ESP32 دون إنترنت عبر المنفذ 81.</p>
     </div>
 
     <h4>حدود التنبيه لكل طابق</h4>
@@ -466,14 +534,12 @@ input[type="password"]::-ms-clear{
     </div>
     <label for="fDrop">هبوط مفاجئ في الطاقة (%)</label>
     <input type="number" id="fDrop" step="5" min="0" max="95" inputmode="numeric">
-    <p class="hint">ضع 0 لتعطيل أي حد. الهبوط المفاجئ يقارن القراءة الحالية بمتوسط آخر 10 قراءات.</p>
 
     <h4>القدرة الاسمية لحساب الكفاءة</h4>
     <div class="two">
       <div><label for="fRF">كل طابق (W)</label><input type="number" id="fRF" step="0.05" min="0" inputmode="decimal"></div>
       <div><label for="fRR">السطح (W)</label><input type="number" id="fRR" step="0.1" min="0" inputmode="decimal"></div>
     </div>
-    <p class="hint">الكفاءة = الطاقة الحالية ÷ القدرة الاسمية. غيّرها حسب مواصفات رقائقك وخلاياك.</p>
 
     <div class="sw" style="margin-top:14px"><label for="fNotify" style="margin:0;color:var(--text)">إشعارات المتصفح</label><input type="checkbox" id="fNotify"></div>
     <div class="sw"><label for="fSound" style="margin:0;color:var(--text)">صوت واهتزاز عند التنبيه</label><input type="checkbox" id="fSound"></div>
@@ -495,6 +561,19 @@ const NAMES=['الأول','الثاني','الثالث','الرابع','الخا
 const COLORS=['#00E5FF','#5B8CFF','#19F5A4','#B388FF','#FF8A2A'];
 const ROOFC='#FFD60A';
 const UPDATE_MS=10000, HIST=90, STALE=UPDATE_MS*3+2000;
+
+/* ---------- Views Navigation ---------- */
+document.querySelectorAll('.bnav-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.view-section').forEach(v=>v.classList.remove('active-view'));
+    btn.classList.add('active');
+    const target=btn.getAttribute('data-target');
+    const targetEl=document.getElementById(target);
+    if(targetEl) targetEl.classList.add('active-view');
+    window.scrollTo(0,0);
+  });
+});
 
 /* ---------- settings ---------- */
 const rid=()=>'bld-'+Math.random().toString(36).slice(2,10);
@@ -744,7 +823,6 @@ function startDemo(){
 const DEMO_TARGETS=[0,1,2,3,4,'r'];
 function demoUi(){
   const n=dropped.size,total=DEMO_TARGETS.length,b=$('#demoDrop');
-  const roofDone=dropped.has('r');
   b.textContent=n===0?'محاكاة انخفاض في طابق':n<total?`محاكاة انخفاض في قسم آخر (${n} من ${total})`:'كل الطوابق والسطح منخفضة';
   b.disabled=n>=total;$('#demoReset').hidden=n===0;
 }
@@ -812,7 +890,6 @@ async function askNotify(){
   if(Notification.permission==='granted')return true;
   try{return (await Notification.requestPermission())==='granted'}catch(e){return false}
 }
-/* ---------- Push حقيقي (يشتغل حتى والتطبيق مسكّر) ---------- */
 const VAPID_PUBLIC_KEY='BBlE9bjCJPirrF1xvlVhEOudDnE-hVPu0NAizhgUJGHLCfDy39nP4AQNfEBbzo14WrtIFX7P5pFwfNnhGQCPyOY';
 const PUSH_API_BASE='https://stalwart-gaufre-8d529c.netlify.app';
 function urlB64ToUint8Array(base64String){
@@ -851,10 +928,6 @@ $('#bellBtn').onclick=async()=>{
   t.innerHTML=ok?'<b>تم تفعيل الإشعارات</b>ستصلك إشعارات حقيقية حتى لو التطبيق مسكّر.':'<b>الإشعارات غير مفعّلة</b>اسمح بها من إعدادات المتصفح.';
   $('#toasts').appendChild(t);setTimeout(()=>t.remove(),4000);
 };
-const designBtnEl=$('#designBtn');if(designBtnEl)designBtnEl.onclick=()=>{$('#imgBig').src=$('#designImg').src;$('#imgDlg').classList.remove('zoomed');$('#imgZoom').textContent='تكبير للقراءة';$('#imgDlg').showModal()};
-$('#imgZoom').onclick=()=>{const z=$('#imgDlg').classList.toggle('zoomed');$('#imgZoom').textContent=z?'عرض الصورة كاملة':'تكبير للقراءة'};
-$('#imgClose').onclick=()=>$('#imgDlg').close();
-$('#imgDlg').addEventListener('click',e=>{if(e.target===$('#imgDlg'))$('#imgDlg').close()});
 $('#clearLog').onclick=()=>{logs=[];renderLog()};
 window.addEventListener('resize',drawChart);
 document.addEventListener('visibilitychange',()=>{
@@ -878,9 +951,9 @@ document.addEventListener('keydown',e=>{
   if(g){e.preventDefault();goCard(g.dataset.target)}
 });
 
-/* ---------- login ---------- */
+/* ---------- login (Updated for Solar@2026 - min 10 chars) ---------- */
 const ACCOUNTS=[
-  {e:'team@solar.iq',h:'edc40819a5d67ea56c4f242069fa8407506d02e3ad189ef1bffcd13f7da1ce78'}
+  {e:'team@solar.iq',h:'8a3ef2c159265f726715d082211913c5453e028b17a1a45d0505a766c06a36bc'} // Hash for Solar@2026
 ];
 function sha256js(str){
   const enc=new TextEncoder().encode(str);
@@ -916,7 +989,6 @@ async function sha(str){
   try{if(window.crypto&&crypto.subtle){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}}catch(e){}
   return sha256js(str);
 }
-window.makeHash=async(e,p)=>{const h=await sha(e.trim().toLowerCase()+':'+p);console.log(`{e:'${e.trim().toLowerCase()}',h:'${h}'}`);return h};
 const BIDI=/[\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g;
 function cleanEmail(v){v=String(v).replace(BIDI,'');const m=v.match(/[A-Za-z0-9._%+\-]+@[A-Za-z0-9\-]+(\.[A-Za-z0-9\-]+)+/);return (m?m[0]:v.trim()).toLowerCase()}
 function cleanPass(v){return String(v).replace(BIDI,'').trim()}
@@ -934,10 +1006,9 @@ function loginErr(t){const el=$('#lErr');el.textContent=t;el.hidden=false}
 $('#lform').addEventListener('submit',async ev=>{
   ev.preventDefault();
   const em=cleanEmail($('#lEmail').value),pw=cleanPass($('#lPass').value);
-  if(!em||pw.length<6){loginErr('أدخل البريد الإلكتروني وكلمة مرور من 6 أحرف على الأقل');return}
-  const cands=[pw];const tok=pw.split(/\s+/)[0];if(tok&&tok!==pw)cands.push(tok);
-  let ok=false;
-  for(const c of cands){const h=await sha(em+':'+c);if(ACCOUNTS.some(a=>a.e===em&&a.h===h)){ok=true;break}}
+  if(!em||pw.length<10){loginErr('أدخل البريد الإلكتروني وكلمة مرور من 10 رموز على الأقل');return}
+  const h=await sha(em+':'+pw);
+  let ok=ACCOUNTS.some(a=>a.e===em&&a.h===h);
   if(!ok){loginErr('البريد أو كلمة المرور غير صحيحة');return}
   authSet(em);
   $('#lErr').hidden=true;$('#lPass').value='';startApp();
